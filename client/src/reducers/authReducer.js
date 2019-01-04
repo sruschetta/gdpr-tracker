@@ -1,0 +1,66 @@
+import {
+  SET_CURRENT_USER,
+  USER_LOADING,
+  GET_CURRENT_USER,
+  GET_DOCUMENTS,
+  ADD_DOCUMENT,
+  UPDATE_DOCUMENT,
+  DELETE_DOCUMENT,
+} from "../actions/types";
+
+
+const isEmpty = require("is-empty");
+
+
+const initialState = {
+  isAuthenticated: false,
+  user: {},
+  loading: false
+};
+
+
+export default function(state = initialState, action) {
+
+  switch (action.type) {
+    case SET_CURRENT_USER:
+      return {
+        ...state,
+        isAuthenticated: !isEmpty(action.payload),
+        user: action.payload
+      };
+    case USER_LOADING:
+      return {
+        ...state,
+        loading: true
+      };
+    case GET_CURRENT_USER:
+      return {
+        ...state,
+        profile: action.payload,
+        loading: false
+      };
+    case GET_DOCUMENTS:
+      return {
+        ...state,
+        documents: action.payload,
+        reload: false,
+      }
+    case ADD_DOCUMENT:
+      return {
+        ...state,
+        reload: true,
+      }
+    case UPDATE_DOCUMENT:
+      return {
+          ...state,
+          reload: true,
+      }
+    case DELETE_DOCUMENT:
+      return {
+        ...state,
+        reload: true,
+      }
+    default:
+      return state;
+  }
+}
