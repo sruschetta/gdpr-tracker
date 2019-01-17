@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
-import HomePage from './components/pages/home/HomePage';
-import LoginPage from './components/pages/login/LoginPage';
-import RegisterPage from './components/pages/register/RegisterPage';
-import PrivateRoute from "./components/private-route/PrivateRoute";
+import Root from './components/root/Root';
 
 import { Provider } from 'react-redux';
 import store from './store';
@@ -14,18 +10,25 @@ import jwt_decode from "jwt-decode";
 import setAuthToken from "./utils/setAuthToken";
 import { setCurrentUser, logoutUser } from "./actions/authActions";
 
-
 const theme = createMuiTheme({
   palette: {
     primary:{
-      main: '#1976d2',
-      textColor: '#ffffff'
+      main: '#00e676',
+      light: '#33eb91',
+      dark: '#00a152',
+      contrastText: '#000000'
     },
     secondary: {
-      main: '#2196f3'
+      main: '#f44336',
+      light: '#ff7961',
+      dark: '#ba000d',
+      contrastText: '#ffffff'
     },
     error: {
-      main: '#ff0000'
+      light: "#e57373",
+      main: "#f44336",
+      dark: "#d32f2f",
+      contrastText: "#fff"
     },
     background: {
       paper: '#fff',
@@ -61,7 +64,7 @@ if (localStorage.jwtToken) {
 
     store.dispatch(logoutUser());
 
-    window.location.href = "./login";
+    window.location.href = './login';
   }
 }
 
@@ -71,15 +74,7 @@ class App extends Component {
     return (
       <MuiThemeProvider theme={theme}>
         <Provider store={store}>
-          <Router>
-            <div>
-              <Route exact path="/login" component={LoginPage} />
-              <Route exact path="/register" component={RegisterPage} />
-              <Switch>
-                <PrivateRoute exact path="/" component={HomePage} />
-              </Switch>
-            </div>
-          </Router>
+          <Root/>
         </Provider>
       </MuiThemeProvider>
     );

@@ -3,7 +3,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const passport = require("passport");
 
-mongoose.connect('mongodb://localhost/documents', { useNewUrlParser: true })
+mongoose.connect('mongodb://127.0.0.1/documents', { useNewUrlParser: true,  useCreateIndex: true })
   .then(() => console.log(`Database connected successfully`))
   .catch(err => console.log(err));
 

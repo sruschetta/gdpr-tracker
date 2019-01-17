@@ -12,10 +12,6 @@ import {DELETE_DIALOG_TITLE, DELETE_DIALOG_BODY, CANCEL, DELETE} from "../../com
 
 class DeleteDialog extends Component {
 
-  constructor(props) {
-    super(props);
-  }
-
   render () {
     return(
       <Dialog open={Boolean(this.props.target)}>

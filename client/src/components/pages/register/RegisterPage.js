@@ -13,7 +13,9 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
+
+import Fade from '@material-ui/core/Fade';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 import {withStyles} from '@material-ui/core/styles';
 
@@ -63,59 +65,67 @@ class RegisterPage extends Component {
     const { errors, classes } = this.props;
 
     return(
-      <Card className={classes.card}>
-        <CardHeader title={REGISTRATION} subheader={REGISTRATION_BODY} color={'primary'} className={classes.header}/>
-        <CardContent>
-          <TextField
-            error={errors.email}
-            helperText={errors.email}
-            margin='normal'
-            fullWidth
-            label={EMAIL}
-            onChange={this.handleChange('email')}
-          />
-          <TextField
-            error={errors.password}
-            helperText={errors.password}
-            type='password'
-            margin='normal'
-            fullWidth
-            label={PASSWORD}
-            onChange={this.handleChange('password')}
-          />
-          <TextField
-            error={errors.password2}
-            helperText={errors.password2}
-            type='password'
-            margin='normal'
-            fullWidth
-            label={PASSWORD2}
-            onChange={this.handleChange('password2')}
-          />
-          <TextField
-            error={errors.name}
-            helperText={errors.name}
-            margin='normal'
-            fullWidth
-            label={NAME}
-            onChange={this.handleChange('name')}
-          />
-          <TextField
-            error={errors.surname}
-            helperText={errors.surname}
-            margin='normal'
-            fullWidth
-            label={SURNAME}
-            onChange={this.handleChange('surname')}
-          />
-        </CardContent>
-        <CardActions className={classes.actions}>
-          <Button onClick={this.registerAction} variant="contained"
-                  size='large' color='primary' >
-                  {REGISTRATION}
-          </Button>
-        </CardActions>
-      </Card>
+      <div>
+        <Fade in={this.state.loading} unmountOnExit>
+          <LinearProgress color='secondary' />
+        </Fade>
+        <Card className={classes.card}>
+          <CardHeader title={REGISTRATION} subheader={REGISTRATION_BODY} color={'primary'} className={classes.header}/>
+          <CardContent>
+            <TextField
+              error={errors.email}
+              helperText={errors.email}
+              margin='normal'
+              fullWidth
+              autoComplete='new-password'
+              label={EMAIL}
+              onChange={this.handleChange('email')}
+            />
+            <TextField
+              error={errors.password}
+              helperText={errors.password}
+              type='password'
+              margin='normal'
+              fullWidth
+              label={PASSWORD}
+              onChange={this.handleChange('password')}
+            />
+            <TextField
+              error={errors.password2}
+              helperText={errors.password2}
+              type='password'
+              margin='normal'
+              fullWidth
+              label={PASSWORD2}
+              onChange={this.handleChange('password2')}
+            />
+            <TextField
+              error={errors.name}
+              helperText={errors.name}
+              margin='normal'
+              fullWidth
+              autoComplete='new-password'
+              label={NAME}
+              onChange={this.handleChange('name')}
+            />
+            <TextField
+              error={errors.surname}
+              helperText={errors.surname}
+              margin='normal'
+              fullWidth
+              autoComplete='new-password'
+              label={SURNAME}
+              onChange={this.handleChange('surname')}
+            />
+          </CardContent>
+          <CardActions className={classes.actions}>
+            <Button onClick={this.registerAction} variant="contained"
+                    size='large' color='primary' >
+                    {REGISTRATION}
+            </Button>
+          </CardActions>
+        </Card>
+      </div>
     );
   }
 
