@@ -22,7 +22,7 @@ module.exports = function validateRegisterInput(data) {
 
   if (validator.isEmpty(data.email)) {
     errors.email = "Email field is required";
-  } else if (!validator.isEmail(data.email) || (data.email.includes('caleffi.com'))) {
+  } else if (!validator.isEmail(data.email) || (!data.email.includes('caleffi.com'))) {
     errors.email = "Email is invalid";
   }
 
