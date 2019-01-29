@@ -48,6 +48,13 @@ const theme = createMuiTheme({
     ].join(','),
     fontSize: 12,
   },
+  overrides: {
+      MuiTableCell: {
+        root: {
+          padding: '4px 16px',
+        }
+      }
+    }
 });
 
 

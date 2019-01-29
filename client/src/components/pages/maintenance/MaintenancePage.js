@@ -25,7 +25,7 @@ import Button from '@material-ui/core/Button';
 
 import { withStyles } from '@material-ui/core/styles';
 
-import { SAVE, CANCEL, EDIT, DELETE, MAINTENANCE_TYPES} from "../../../common/Strings";
+import { SAVE, CANCEL, EDIT, DELETE, MAINTENANCE_TYPES } from "../../../common/Strings";
 
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -127,6 +127,7 @@ class MaintenancePage extends Component {
             <TextField
               margin='normal'
               fullWidth
+              autoComplete='new-password'
               value={this.state.currentItemTitle}
               label='Titolo'
               error={Boolean(errors.title)}

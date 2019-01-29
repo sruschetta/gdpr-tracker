@@ -17,8 +17,6 @@ import ListItem from '@material-ui/core/ListItem';
 import Drawer from '@material-ui/core/Drawer';
 import Typography from '@material-ui/core/Typography';
 
-import SearchBar from '../searchbar/SearchBar';
-
 import HomePage from '../pages/home/HomePage';
 import LoginPage from '../pages/login/LoginPage';
 import RegisterPage from '../pages/register/RegisterPage';
@@ -33,7 +31,7 @@ import { withStyles } from '@material-ui/core/styles';
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { logoutUser, searchDocument } from "../../actions/authActions";
+import { logoutUser } from "../../actions/authActions";
 
 
 import { HOME, ZONES, MAINTENANCE_TYPES, CLIENT_TYPES, EMAIL_SETTINGS, LOGOUT } from '../../common/Strings';
@@ -58,9 +56,7 @@ class Root extends Component {
     super();
 
     this.state = {
-      menuOpen: false,
-      searchContent: '',
-      searchedTerm: ''
+      menuOpen: false
     }
   }
 
@@ -80,9 +76,6 @@ class Root extends Component {
               <Typography variant="h6" color="inherit">
                 {auth.pageTitle}
               </Typography>
-              {
-                window.location.pathname === ('/') && <SearchBar />
-              }
             </Toolbar>
           </AppBar>
           </div>
@@ -140,7 +133,6 @@ class Root extends Component {
 
 Root.propTypes = {
   logoutUser: PropTypes.func.isRequired,
-  searchDocument: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
 };
@@ -151,4 +143,4 @@ const mapStateToProps = state => ({
 });
 
 
-export default withStyles(styles)(withRouter(connect( mapStateToProps, { logoutUser, searchDocument })(Root)));
+export default withStyles(styles)(withRouter(connect( mapStateToProps, { logoutUser })(Root)));

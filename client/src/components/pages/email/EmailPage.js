@@ -13,7 +13,6 @@ import { setPageTitle, getEmailSettings, updateEmailSettings } from "../../../ac
 
 import { withStyles } from '@material-ui/core/styles';
 
-
 const styles = {
   container: {
     marginTop: 96,
@@ -26,6 +25,11 @@ const styles = {
   buttonContainer: {
     paddingTop: 16,
     textAlign: 'center',
+  },
+  uploadButton: {
+    paddingTop: 24,
+    paddingBottom: 24,
+    fontFamily: 'Roboto'
   }
 };
 
@@ -84,33 +88,39 @@ class EmailPage extends Component {
         <TextField
           margin='normal'
           fullWidth
+          autoComplete='new-password'
           onChange={this.handleChange('subject')}
           value={this.state.subject}
           label={SUBJECT}/>
         <TextField
           margin='normal'
           fullWidth
+          autoComplete='new-password'
           rows={5}
           multiline
           onChange={this.handleChange('body')}
           value={this.state.body}
           label={BODY}/>
-          <div className={classes.buttonContainer}>
+        <input type='file' accept='application/pdf' onChange={ (event) => this.handleselectedFile(event)} className={classes.uploadButton}/>
+        <div className={classes.buttonContainer}>
             <Button color='primary' onClick={()=> this.saveAction()}>{SAVE}</Button>
           </div>
       </Paper>
     );
   }
 
+
   /*--- Actions ---*/
 
-  saveAction = () => {
-    var data = {
-      subject: this.state.subject,
-      body: this.state.body
-    }
-    this.props.updateEmailSettings(data);
+
+  handleselectedFile = event => {
+
+    this.setState({
+      selectedFile: event.target.files[0],
+    })
   }
+
+
 
   /*--- Text Field Handler ---*/
 
@@ -121,8 +131,19 @@ class EmailPage extends Component {
         [key]: value,
     });
   }
-}
 
+
+  saveAction = () => {
+
+    var formData = new FormData();
+
+    formData.append('subject', this.state.subject);
+    formData.append('body', this.state.body);
+    formData.append('file', this.state.selectedFile);
+
+    this.props.updateEmailSettings(formData);
+  }
+}
 
 
 EmailPage.propTypes = {
@@ -131,7 +152,8 @@ EmailPage.propTypes = {
   updateEmailSettings: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
-};
+}
+
 
 const mapStateToProps = state => ({
   auth: state.auth,

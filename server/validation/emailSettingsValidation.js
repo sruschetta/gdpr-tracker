@@ -9,11 +9,11 @@ module.exports = function validateEmailSettingsInput(data) {
   data.body = !isEmpty(data.body) ? data.body : '';
 
   if (Validator.isEmpty(data.subject)) {
-    errors.subject = 'Subject field is required';
+    errors.subject = 'Il campo Oggetto è obbligatorio.';
   }
 
   if (Validator.isEmpty(data.body)) {
-    errors.body = 'Body field is required';
+    errors.body = 'Il campo Testo è obbligatorio.';
   }
 
   return {

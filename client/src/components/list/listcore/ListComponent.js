@@ -5,24 +5,30 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import TableSortLabel from '@material-ui/core/TableSortLabel';
 import TablePagination from '@material-ui/core/TablePagination';
 
+import Typography from '@material-ui/core/Typography';
+
 import ListItemComponent from '../listitem/ListItemComponent';
+import SearchToolbar from '../toolbar/SearchToolbar';
 
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = {
 
   lth: {
-    minWidth: 120,
+    minWidth: 160,
   },
   mth:{
-    minWidth: 80,
+    minWidth: 120,
+  },
+  sth: {
+    minWidth: 40,
   },
   row: {
     background: '#f5f5f5',
   },
-
   root: {
     width: '100%',
     paddingTop: 64,
@@ -34,13 +40,16 @@ const styles = {
   },
 
   tableWrapper: {
-    maxHeight: 'calc(100vh - 140px)',
+    maxHeight: 'calc(100vh - 192px)',
     overflowX: 'auto',
   },
 
   tablePagination: {
     paddingTop: 10,
     paddingRight: 85
+  },
+  black: {
+    color: 'black',
   }
 
 };
@@ -51,7 +60,7 @@ class ListComponent extends Component {
     super();
     this.state = {
       rowsPerPage: 50,
-      page: 0
+      page: 0,
     }
   }
 
@@ -69,18 +78,60 @@ class ListComponent extends Component {
 
     return(
       <div className={classes.root}>
+        <SearchToolbar
+          checkColumnCallback={this.props.checkColumnCallback}
+          searchCallback={this.props.searchCallback}
+          clearSearchCallback={this.props.clearSearchCallback}
+          headers={this.props.headers}
+          users={this.props.users}
+          zones={this.props.zones}
+          maintenance_types={this.props.maintenance_types}
+          filters={this.props.filters}
+          filterChangeCallback={this.props.filterChangeCallback}
+          />
         <div className ={classes.tableWrapper}>
           <Table padding='dense' className={classes.table}>
-            <TableHead color='primary' variant='h4'>
+            <TableHead color='primary'>
               <TableRow color='primary'>
                 {
                   this.props.headers.map( (item, index) => {
-                    return (<TableCell color='primary' key={index}
-                    className={((item['class'] === 'lth')?classes.lth:classes.mth)}>
-                      {item['title']}
-                    </TableCell>);
+
+                    if(!item.checked) return null;
+
+                    var className = '';
+                    switch(item['class']) {
+                      case 'lth':
+                        className = classes.lth;
+                        break;
+                      case 'mth':
+                        className = classes.mth;
+                        break;
+                      case 'sth':
+                        className =  classes.sth;
+                        break;
+                      default:
+                        break;
+                    }
+
+                    return (
+                      <TableCell color='primary'
+                                 key={index}
+                                 className={className}>
+                        <TableSortLabel
+                          active={this.props.orderBy === index}
+                          direction={this.props.order}
+                          onClick={ this.props.sortHandler(index) } >
+                          <Typography className={classes.black}>
+                            <b>{ item['title'] }</b>
+                          </Typography>
+                        </TableSortLabel>
+                      </TableCell>);
                   })
                 }
+                <TableCell color='primary'
+                           key={0}
+                           className={'sth'}>
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -97,6 +148,7 @@ class ListComponent extends Component {
                                      zones={this.props.zones}
                                      client_types={this.props.client_types}
                                      users={this.props.users}
+                                     headers={this.props.headers}
                                      editCallback={this.props.itemEditCallback}
                                      deleteCallback={this.props.itemDeleteCallback}
                                      sendCallback={this.props.itemSendCallback}
@@ -108,7 +160,7 @@ class ListComponent extends Component {
         </Table>
         </div>
         {
-          (this.props.itemsCount > 0) && (
+          (this.props.itemsCount > 50) && (
             <TablePagination
               className={classes.tablePagination}
               rowsPerPageOptions={[this.state.rowsPerPage]}
@@ -130,6 +182,9 @@ class ListComponent extends Component {
     );
   }
 
+
+  /*--- Page Change ---*/
+
   handleChangePage = (event, page) => {
 
     this.setState({
@@ -141,6 +196,7 @@ class ListComponent extends Component {
 
   handleChangeRowsPerPage = event => {
   };
+
 }
 
 export default withStyles(styles)(ListComponent);

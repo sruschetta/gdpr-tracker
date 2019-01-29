@@ -128,6 +128,7 @@ class ClientPage extends Component {
             <TextField
               margin='normal'
               fullWidth
+              autoComplete='new-password'
               value={this.state.currentItemName}
               label={CLIENT_TYPE}
               error={Boolean(this.state.errors && this.state.errors.name)}

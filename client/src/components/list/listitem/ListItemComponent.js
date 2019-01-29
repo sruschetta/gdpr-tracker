@@ -50,28 +50,115 @@ class ListItemComponent extends Component {
     var main_type = this.getItem(this.props.client_types, this.props.item.gdpr_main_reference_type);
     var secondary_type = this.getItem(this.props.client_types, this.props.item.gdpr_secondary_reference_type);
 
+    var maintenanceCell = null;
+    var creatorCell = null;
+    var refCodeCell = null;
+    var buildingCell = null;
+    var addressCell = null;
+    var cityCell = null;
+    var provinceCell = null;
+    var extraCell = null;
+    var referenceCell = null;
+    var referencePhoneCell = null;
+    var referenceMobileCell = null;
+    var zoneCell = null;
+    var creationDateCell = null;
+    var mainTypeCell = null;
+    var mainReferenceCell = null;
+    var mainReferenceEmailCell = null;
+    var secondaryTypeCell = null;
+    var secondaryReferenceCell = null;
+    var secondaryReferenceEmailCell = null;
+    var sendCell = null;
+
+    if(this.props.headers){
+
+      if(this.props.headers[0].checked === true) {
+        maintenanceCell = <TableCell>{(maintenance_type)?maintenance_type.title : ''}</TableCell>;
+      }
+      if(this.props.headers[1].checked === true) {
+        creatorCell = <TableCell>{(creator)?(creator.name + " " + creator.surname) : ''}</TableCell>;
+      }
+      if(this.props.headers[2].checked === true) {
+        refCodeCell = <TableCell>{this.props.item.ref_code}</TableCell>;
+      }
+      if(this.props.headers[3].checked === true) {
+        buildingCell = <TableCell>{this.props.item.building_name}</TableCell>;
+      }
+      if(this.props.headers[4].checked === true) {
+        addressCell = <TableCell>{this.props.item.address}</TableCell>;
+      }
+      if(this.props.headers[5].checked === true) {
+        cityCell = <TableCell>{this.props.item.city}</TableCell>;
+      }
+      if(this.props.headers[6].checked === true) {
+        provinceCell = <TableCell>{this.props.item.province}</TableCell>;
+      }
+      if(this.props.headers[7].checked === true) {
+        extraCell = <TableCell>{this.props.item.extra}</TableCell>;
+      }
+      if(this.props.headers[8].checked === true) {
+        referenceCell = <TableCell>{this.props.item.reference}</TableCell>;
+      }
+      if(this.props.headers[9].checked === true) {
+        referencePhoneCell = <TableCell>{this.props.item.reference_phone}</TableCell>;
+      }
+      if(this.props.headers[10].checked === true) {
+        referenceMobileCell = <TableCell>{this.props.item.reference_mobile}</TableCell>;
+      }
+      if(this.props.headers[11].checked === true) {
+        zoneCell = <TableCell>{(zone)?zone.name:''}</TableCell>;
+      }
+      if(this.props.headers[12].checked === true) {
+        creationDateCell = <TableCell>{creation_date}</TableCell>;
+      }
+      if(this.props.headers[13].checked === true) {
+        mainTypeCell = <TableCell>{(main_type)?main_type.name:''}</TableCell>;
+      }
+      if(this.props.headers[14].checked === true) {
+        mainReferenceCell = <TableCell>{this.props.item.gdpr_main_reference}</TableCell>;
+      }
+      if(this.props.headers[15].checked === true) {
+        mainReferenceEmailCell = <TableCell>{this.props.item.gdpr_main_reference_email}</TableCell>;
+      }
+      if(this.props.headers[16].checked === true) {
+        secondaryTypeCell = <TableCell>{(secondary_type)?secondary_type.name:''}</TableCell>;
+      }
+      if(this.props.headers[17].checked === true) {
+        secondaryReferenceCell = <TableCell>{this.props.item.gdpr_secondary_reference}</TableCell>;
+      }
+      if(this.props.headers[18].checked === true) {
+        secondaryReferenceEmailCell = <TableCell>{this.props.item.gdpr_secondary_reference_email}</TableCell>;
+      }
+      if(this.props.headers[19].checked === true) {
+        sendCell = <TableCell>{send_date}</TableCell>;
+      }
+    }
     return (
+
       <TableRow
         className={this.props.className}
         hover>
-        <TableCell>{(maintenance_type)?maintenance_type.title : ''}</TableCell>
-        <TableCell>{(creator)?(creator.name + " " + creator.surname) : ''}</TableCell>
-        <TableCell>{this.props.item.ref_code}</TableCell>
-        <TableCell>{this.props.item.building_name}</TableCell>
-        <TableCell>{this.props.item.address}</TableCell>
-        <TableCell>{this.props.item.city}</TableCell>
-        <TableCell>{this.props.item.extra}</TableCell>
-        <TableCell>{this.props.item.reference}</TableCell>
-        <TableCell>{this.props.item.reference_phone}</TableCell>
-        <TableCell>{(zone)?zone.name:''}</TableCell>
-        <TableCell>{creation_date}</TableCell>
-        <TableCell>{this.props.item.gdpr_main_reference}</TableCell>
-        <TableCell>{this.props.item.gdpr_main_reference_email}</TableCell>
-        <TableCell>{(main_type)?main_type.name:''}</TableCell>
-        <TableCell>{this.props.item.gdpr_secondary_reference}</TableCell>
-        <TableCell>{this.props.item.gdpr_secondary_reference_email}</TableCell>
-        <TableCell>{(secondary_type)?secondary_type.name:''}</TableCell>
-        <TableCell>{send_date}</TableCell>
+        {maintenanceCell}
+        {creatorCell}
+        {refCodeCell}
+        {buildingCell}
+        {addressCell}
+        {cityCell}
+        {provinceCell}
+        {extraCell}
+        {referenceCell}
+        {referencePhoneCell}
+        {referenceMobileCell}
+        {zoneCell}
+        {creationDateCell}
+        {mainTypeCell}
+        {mainReferenceCell}
+        {mainReferenceEmailCell}
+        {secondaryTypeCell}
+        {secondaryReferenceCell}
+        {secondaryReferenceEmailCell}
+        {sendCell}
         <TableCell>
           <IconButton onClick={this.menuClick}><Icon>more_vert</Icon></IconButton>
           <Menu anchorEl={this.state.anchorEl}

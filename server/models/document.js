@@ -28,6 +28,11 @@ const DocumentSchema = new Schema({
     text: true,
     default: ''
   },
+  province: {
+    type: String,
+    text: true,
+    default: ''
+  },
   extra: {
     type: String,
     text: true,
@@ -39,6 +44,10 @@ const DocumentSchema = new Schema({
     default: ''
   },
   reference_phone: {
+    type: String,
+    default: ''
+  },
+  reference_mobile: {
     type: String,
     default: ''
   },

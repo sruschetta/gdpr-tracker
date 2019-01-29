@@ -65,14 +65,29 @@ function getNewToken(oAuth2Client, callback) {
 }
 
 
-function makeBody(to, subject, message) {
-    var str = ["Content-Type: text/plain; charset=\"UTF-8\"\n",
-        "MIME-Version: 1.0\n",
-        "Content-Transfer-Encoding: 7bit\n",
-        "to: ", to, "\n",
-        "subject: ", subject, "\n\n",
-        message
-    ].join('');
+function makeBody(to, subject, message, filename) {
+  var boundary = 'gc0p4Jq0M2Yt08jU534c0p';
+  var nl = '\n';
+  var attach = new Buffer(fs.readFileSync(require('path').resolve(__dirname, '../upload/' + filename ))) .toString('base64');
+  var str = [
+        "MIME-Version: 1.0",
+        "Content-Transfer-Encoding: 7bit",
+        "to: " + to,
+        "subject: " + subject,
+        "Content-Type: multipart/alternate; boundary=" + boundary + nl,
+        "--" + boundary,
+        "Content-Type: text/html; charset=UTF-8",
+        "Content-Transfer-Encoding: 7bit" + nl,
+        message+ nl,
+        "--" + boundary,
+        "--" + boundary,
+        "Content-Type: Application/pdf; name=" + filename,
+        "Content-Disposition: attachment; filename=" + filename,
+        "Content-Transfer-Encoding: base64" + nl,
+        attach,
+        "--" + boundary + "--"
+
+    ].join("\n");
 
     var encodedMail = new Buffer(str).toString("base64").replace(/\+/g, '-').replace(/\//g, '_');
     return encodedMail;
@@ -81,7 +96,7 @@ function makeBody(to, subject, message) {
 
 function sendMessage(auth) {
     var gmail = google.gmail('v1');
-    var raw = makeBody(to, subject, body);
+    var raw = makeBody(to, subject, body, 'caleffi-privacy.pdf');
     gmail.users.messages.send({
         auth: auth,
         userId: 'me',
@@ -91,13 +106,13 @@ function sendMessage(auth) {
     }, function(err, response) {});
 }
 
+
 module.exports = function sendEmail(_to, _subject, _body){
 
   to = _to;
   subject = _subject;
   body = _body;
 
-    // Load client secrets from a local file.
   fs.readFile(require('path').resolve(__dirname, 'credentials.json'), (err, content) => {
     if (err)
       return console.log('Error loading client secret file:', err);

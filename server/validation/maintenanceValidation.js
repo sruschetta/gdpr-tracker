@@ -8,7 +8,7 @@ module.exports = function validateMaintenanceInput(data) {
   data.title = !isEmpty(data.title) ? data.title : '';
 
   if (Validator.isEmpty(data.title)) {
-    errors.title = 'Title field is required';
+    errors.title = 'Il campo Titolo è obbligatorio.';
   }
 
   return {

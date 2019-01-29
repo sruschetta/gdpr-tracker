@@ -12,7 +12,7 @@ import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button';
 
 import {EDIT_DIALOG_TITLE, EDIT_DIALOG_BODY, EDIT, CANCEL, REF_CODE, BUILDING_NAME,
-  ADDRESS, EXTRA, CITY, REFERENCE, REFERENCE_PHONE, ZONE, GDPR_REFERENCE, GDPR_REFERENCE_EMAIL,
+  ADDRESS, EXTRA, CITY, PROVINCE, REFERENCE, REFERENCE_PHONE, REFERENCE_MOBILE_PHONE, ZONE, GDPR_REFERENCE, GDPR_REFERENCE_EMAIL,
   GDPR_SECONDARY_REFERENCE, GDPR_SECONDARY_REFERENCE_EMAIL, MAINTENANCE_TYPE,
   GDPR_REFERENCE_TYPE, GDPR_SECONDARY_REFERENCE_TYPE
 } from "../../common/Strings";
@@ -29,9 +29,11 @@ class EditDialog extends Component {
       building_name: '',
       address: '',
       city: '',
+      province: '',
       extra: '',
       reference: '',
       reference_phone: '',
+      reference_mobile: '',
       zone: '',
       gdpr_main_reference: '',
       gdpr_main_reference_email: '',
@@ -83,6 +85,7 @@ class EditDialog extends Component {
         extra: target.extra,
         reference: target.reference,
         reference_phone: target.reference_phone,
+        reference_mobile: target.reference_mobile,
         zone: target.zone,
         gdpr_main_reference: target.gdpr_main_reference,
         gdpr_main_reference_email: target.gdpr_main_reference_email,
@@ -126,6 +129,7 @@ class EditDialog extends Component {
             <TextField
               margin='normal'
               fullWidth
+              autoComplete='new-password'
               label={REF_CODE}
               onChange={this.handleChange('ref_code')}
               value={this.state.ref_code}
@@ -134,6 +138,7 @@ class EditDialog extends Component {
             <TextField
               margin='normal'
               fullWidth
+              autoComplete='new-password'
               label={BUILDING_NAME}
               onChange={this.handleChange('building_name')}
               value={this.state.building_name}
@@ -142,6 +147,7 @@ class EditDialog extends Component {
             <TextField
               margin='normal'
               fullWidth
+              autoComplete='new-password'
               label={ADDRESS}
               multiline
               rows='2'
@@ -152,6 +158,7 @@ class EditDialog extends Component {
             <TextField
               margin='normal'
               fullWidth
+              autoComplete='new-password'
               label={CITY}
               onChange={this.handleChange('city')}
               value={this.state.city}
@@ -160,6 +167,16 @@ class EditDialog extends Component {
             <TextField
               margin='normal'
               fullWidth
+              autoComplete='new-password'
+              label={PROVINCE}
+              onChange={this.handleChange('province')}
+              value={this.state.province}
+              error={Boolean(errors.province)}
+              helperText={errors.province}/>
+            <TextField
+              margin='normal'
+              fullWidth
+              autoComplete='new-password'
               multiline
               rows='2'
               label={EXTRA}
@@ -169,6 +186,7 @@ class EditDialog extends Component {
             <TextField
               margin='normal'
               fullWidth
+              autoComplete='new-password'
               label={REFERENCE}
               onChange={this.handleChange('reference')}
               error={Boolean(errors.reference)}
@@ -177,11 +195,21 @@ class EditDialog extends Component {
             <TextField
               margin='normal'
               fullWidth
+              autoComplete='new-password'
               label={REFERENCE_PHONE}
               onChange={this.handleChange('reference_phone')}
               error={Boolean(errors.reference_phone)}
               value={this.state.reference_phone}
               helperText={errors.reference_phone}/>
+            <TextField
+              margin='normal'
+              fullWidth
+              autoComplete='new-password'
+              label={REFERENCE_MOBILE_PHONE}
+              onChange={this.handleChange('reference_mobile')}
+              error={Boolean(errors.reference_mobile)}
+              value={this.state.reference_mobile}
+              helperText={errors.reference_mobile}/>
             <TextField
               select
               margin='normal'
@@ -198,8 +226,27 @@ class EditDialog extends Component {
               ))}
             </TextField>
             <TextField
+              select
               margin='normal'
               fullWidth
+              label={GDPR_REFERENCE_TYPE}
+              onChange={this.handleChange('gdpr_main_reference_type')}
+              error={Boolean(errors.gdpr_main_reference_type)}
+              helperText={errors.gdpr_main_reference_type}
+              value={this.state.gdpr_main_reference_type} >
+                <MenuItem key={0} value={''}></MenuItem>
+                {
+                  (this.props.client_types) && this.props.client_types.map( (item, index) => (
+                  <MenuItem key={ index + 1 } value={item._id}>
+                    {item.name}
+                  </MenuItem>
+                  ))
+                }
+            </TextField>
+            <TextField
+              margin='normal'
+              fullWidth
+              autoComplete='new-password'
               label={GDPR_REFERENCE}
               onChange={this.handleChange('gdpr_main_reference')}
               value={this.state.gdpr_main_reference}
@@ -208,6 +255,7 @@ class EditDialog extends Component {
             <TextField
               margin='normal'
               fullWidth
+              autoComplete='new-password'
               label={GDPR_REFERENCE_EMAIL}
               onChange={this.handleChange('gdpr_main_reference_email')}
               error={Boolean(errors.gdpr_main_reference_email)}
@@ -217,20 +265,24 @@ class EditDialog extends Component {
               select
               margin='normal'
               fullWidth
-              label={GDPR_REFERENCE_TYPE}
-              onChange={this.handleChange('gdpr_main_reference_type')}
-              error={Boolean(errors.gdpr_main_reference_type)}
-              helperText={errors.gdpr_main_reference_type}
-              value={this.state.gdpr_main_reference_type} >
-              {(this.props.client_types) && this.props.client_types.map( (item, index) => (
-                <MenuItem key={index} value={item._id}>
-                  {item.name}
-                </MenuItem>
-              ))}
+              label={GDPR_SECONDARY_REFERENCE_TYPE}
+              onChange={this.handleChange('gdpr_secondary_reference_type')}
+              error={Boolean(errors.gdpr_secondary_reference_type)}
+              helperText={errors.gdpr_secondary_reference_type}
+              value={this.state.gdpr_secondary_reference_type} >
+                <MenuItem key={0} value={''}></MenuItem>
+                {
+                  (this.props.client_types) && this.props.client_types.map( (item, index) => (
+                  <MenuItem key={ index + 1 } value={item._id}>
+                    {item.name}
+                  </MenuItem>
+                  ))
+                }
             </TextField>
             <TextField
               margin='normal'
               fullWidth
+              autoComplete='new-password'
               label={GDPR_SECONDARY_REFERENCE}
               onChange={this.handleChange('gdpr_secondary_reference')}
               value={this.state.gdpr_secondary_reference}
@@ -239,26 +291,12 @@ class EditDialog extends Component {
             <TextField
               margin='normal'
               fullWidth
+              autoComplete='new-password'
               label={GDPR_SECONDARY_REFERENCE_EMAIL}
               onChange={this.handleChange('gdpr_secondary_reference_email')}
               error={Boolean(errors.gdpr_secondary_reference_email)}
               value={this.state.gdpr_secondary_reference_email}
               helperText={errors.gdpr_secondary_reference_email}/>
-            <TextField
-              select
-              margin='normal'
-              fullWidth
-              label={GDPR_SECONDARY_REFERENCE_TYPE}
-              onChange={this.handleChange('gdpr_secondary_reference_type')}
-              error={Boolean(errors.gdpr_secondary_reference_type)}
-              helperText={errors.gdpr_secondary_reference_type}
-              value={this.state.gdpr_secondary_reference_type} >
-              {(this.props.client_types) && this.props.client_types.map( (item, index) => (
-                <MenuItem key={index} value={item._id}>
-                  {item.name}
-                </MenuItem>
-              ))}
-            </TextField>
           </DialogContent>
           <DialogActions>
             <Button onClick={this.saveAction} color="primary">

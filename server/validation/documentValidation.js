@@ -1,7 +1,10 @@
+
 const Validator = require('validator');
 const isEmpty = require('is-empty');
 
 module.exports = function validateDocumentInput(data) {
+
+
   let errors = {};
 
   data.maintenance_type = !isEmpty(data.maintenance_type) ? data.maintenance_type : null;
@@ -17,24 +20,27 @@ module.exports = function validateDocumentInput(data) {
   data.client = !isEmpty(data.client) ? data.client : null;
 
   if (!data.maintenance_type || Validator.isEmpty(data.maintenance_type)) {
-    errors.maintenance_type = 'Maintenance type field is required';
+    errors.maintenance_type = 'Il campo Tipologia Intervento è obbligatorio.';
   }
   if (Validator.isEmpty(data.address)) {
-    errors.address = 'Address field is required';
+    errors.address = 'Il campo Indirizzo è obbligatorio.';
   }
   if (Validator.isEmpty(data.city)) {
-    errors.city = 'City field is required';
+    errors.city = 'Il campo Città è obbligatorio.';
+  }
+  if (Validator.isEmpty(data.province)) {
+    errors.province = 'Il campo Provincia è obbligatorio.';
   }
   if (Validator.isEmpty(data.reference)) {
-    errors.reference = 'Reference field is required';
+    errors.reference = 'Il campo Codice Riferimento è obbligatorio.';
   }
   if (Validator.isEmpty(data.gdpr_main_reference)) {
-    errors.gdpr_main_reference = 'GDPR main reference field is required';
+    errors.gdpr_main_reference = 'Il campo Riferimento GDPR è obbligatorio.';
   }
   if (Validator.isEmpty(data.gdpr_main_reference_email)) {
-    errors.gdpr_main_reference_email = 'GDPR main reference email field is required';
+    errors.gdpr_main_reference_email = 'Il campo Email Riferimento GDPR è obbligatorio.';
   } else if (!Validator.isEmail(data.gdpr_main_reference_email)) {
-    errors.gdpr_main_reference_email = "GDPR Main reference email is invalid";
+    errors.gdpr_main_reference_email = 'Email non valida.';
   }
 
   return {

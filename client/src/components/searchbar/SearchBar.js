@@ -17,6 +17,7 @@ import { searchDocument, clearDocumentSearch } from "../../actions/authActions";
 const styles = {
   searchBar: {
     paddingTop: 12,
+    fontFamily: 'Roboto'
   },
   searchContainer: {
     paddingLeft: 12,
@@ -48,15 +49,16 @@ class SearchBar extends Component {
     return (
       <div className={classes.searchContainer}>
           <TextField className={classes.searchBar}
-                   placeholder={SEARCH}
-                   value={this.state.searchTerm}
-                   onKeyDown={ (e) => this.keyPressedAction(e) }
-                   onChange={this.handleChange('searchTerm')}
-                   InputProps={{
+                     placeholder={SEARCH}
+                     value={this.state.searchTerm}
+                     onKeyDown={ (e) => this.keyPressedAction(e) }
+                     onChange={this.handleChange('searchTerm')}
+                     InputProps={{
                         endAdornment: (
                           <InputAdornment variant="filled" position="end">
                             {
                               <IconButton
+                                    disableRipple={true}
                                     onClick={ () => this.searchAction() }>
                                 <SearchIcon />
                               </IconButton>

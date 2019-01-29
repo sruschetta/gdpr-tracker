@@ -123,9 +123,9 @@ export const logoutUser = () => dispatch => {
 
 
 // Get documents
-export const getDocuments = (page) => dispatch => {
+export const getDocuments = (page, order, orderBy) => dispatch => {
   axios
-    .get("/api/document?page=" + page)
+    .get("/api/document?page=" + page + "&order=" + order + "&orderBy=" + orderBy)
     .then(res => {
       dispatch({
         type: GET_DOCUMENTS,
@@ -141,9 +141,9 @@ export const getDocuments = (page) => dispatch => {
     );
 };
 
-export const searchDocument = term => dispatch => {
+export const searchDocument = params => dispatch => {
 
-  axios.get('/api/document/search/' + term )
+  axios.post('/api/document/search', params )
     .then(function(res){
       dispatch({
         type: SEARCH_DOCUMENT,
@@ -516,8 +516,18 @@ export const getEmailSettings = settings => dispatch => {
 
 //Update email settings
 
-export const updateEmailSettings = settings => dispatch => {
-  axios.post('/api/email_settings', settings)
+export const updateEmailSettings = formData => dispatch => {
+
+
+  axios({
+    url: '/api/email_settings',
+    method: 'POST',
+    data: formData,
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'multipart/form-data'
+      }
+  })
   .then (res => {
     dispatch({
       type: UPDATE_EMAIL_SETTINGS,

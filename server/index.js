@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const express = require('express');
 const bodyParser = require('body-parser');
+const fileUpload = require('express-fileupload');
 const passport = require("passport");
 
 mongoose.connect('mongodb://127.0.0.1/documents', { useNewUrlParser: true,  useCreateIndex: true })
@@ -14,6 +15,7 @@ const port  = process.env.PORT || 5000;
 var app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(fileUpload());
 
 // API routes
 require('./routes')(app);
@@ -26,4 +28,11 @@ var server = app.listen(port, function(err){
     console.log('Express error: ' + err);
   }
   console.log('Server started');
+});
+
+
+process.on('SIGINT', function() {
+  mongoose.connection.close(function () {
+    process.exit(0);
+  });
 });

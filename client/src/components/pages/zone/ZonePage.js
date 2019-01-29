@@ -64,7 +64,7 @@ class ZonePage extends Component {
     };
   }
 
-  componentDidMount() {    
+  componentDidMount() {
     this.props.setPageTitle(ZONES);
     this.props.getZones();
   }
@@ -128,6 +128,7 @@ class ZonePage extends Component {
             <TextField
               margin='normal'
               fullWidth
+              autoComplete='new-password'
               value={this.state.currentItemName}
               label='Nome zona'
               error={Boolean(this.state.errors && this.state.errors.name)}

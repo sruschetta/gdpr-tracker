@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const keys = require('../config/keys');
+const fs = require('fs');
 
 // Load input validation
 const validateRegisterInput = require('../validation/registerValidation');
@@ -152,13 +153,28 @@ module.exports = (app) => {
       passport.authenticate("jwt", { session: false }),
         function(req, res) {
 
-          var skip = 0;
-          if(req.query.page) {
-            skip = req.query.page*50;
+          var page = req.query.page;
+          var order = req.query.order;
+          var orderBy = req.query.orderBy;
+
+          if(page === "undefined") {
+            page = 0;
+          }
+          else {
+            page = page*50;
+          }
+
+          if(order === "undefined") {
+            order = 'desc';
+          }
+
+          if(orderBy === "undefined") {
+            orderBy = 'creation_date';
           }
 
           Document.count().then( (count) => {
-            Document.find().skip(skip).limit(50).sort({creation_date: 'desc'}).then( documents => {
+            Document.find().skip(page).limit(50).sort({[orderBy]: order}).then( documents => {
+
               return res.json({
                 documents: documents,
                 count: count
@@ -207,21 +223,51 @@ module.exports = (app) => {
       });
 
 
-      app.get('/api/document/search/:term',
+      app.post('/api/document/search',
         passport.authenticate('jwt', {session: false}),
           function(req, res) {
 
-            var skip = 0;
-            if(req.query.page) {
-              skip = req.query.page*50;
-            }
+            var {body} = req;
 
-            if(req.params.term.length < 2) {
+            //return res.json(body);
+            var keyword = body.keyword;
+
+            if(keyword.length === 1 || keyword.length === 2) {
               return res.status(400).json({errors: 'Search term is too short'});
             }
-            var re = new RegExp(req.params.term, 'i');
 
-            var conditions = [ { ref_code: { $regex: re }},
+            var filters = {};
+
+            if(body.filters){
+
+              if(body.filters.userFilter) {
+                filters.creator = body.filters.userFilter;
+              }
+              if(body.filters.maintenanceTypeFilter) {
+                filters.maintenance_type = body.filters.maintenanceTypeFilter;
+              }
+              if(body.filters.zoneFilter) {
+                filters.zone = body.filters.zoneFilter;
+              }
+            }
+
+            if(keyword.length === 0) {
+
+              Document.find(filters).count().then( (count) => {
+                Document.find(filters).exec(function(err, documents) {
+
+                      return res.json({
+                        documents: documents,
+                        count: count
+                      });
+                })
+              });
+            }
+            else {
+
+              var re = new RegExp(keyword, 'i');
+
+              var conditions = [ { ref_code: { $regex: re }},
                                  { building_name: { $regex: re }},
                                  { address: { $regex: re }},
                                  { city: { $regex: re }},
@@ -231,20 +277,19 @@ module.exports = (app) => {
                                  { gdpr_main_reference_email: { $regex: re }},
                                  { gdpr_secondary_reference: { $regex: re }},
                                  { gdpr_secondary_reference_email: { $regex: re }},
-                              ];
+                                ];
 
-            Document.find().or(conditions).count().then( (count) => {
-              Document.find().or(conditions).skip(skip).limit(50)
-                    .exec(function(err, documents) {
-                        return res.json({
-                          documents: documents,
-                          count: count
-                        });
-                      })
-            });
+              Document.find(filters).or(conditions).count().then( (count) => {
+                Document.find(filters).or(conditions).exec(function(err, documents) {
+                          return res.json({
+                            documents: documents,
+                            count: count
+                          });
+                })
+              });
+
           }
-      );
-
+      });
 
       app.post('/api/document/:documentId/check',
         passport.authenticate('jwt', {session: false}),
@@ -285,7 +330,6 @@ module.exports = (app) => {
               }
               else {
 
-                console.log(model);
                 EmailSettings.findOne().then( item => {
                   sendEmail(model.gdpr_main_reference_email, item.subject, item.body);
                   return res.json({success: true});
@@ -640,6 +684,7 @@ module.exports = (app) => {
               passport.authenticate("jwt", {session: false}),
                 function(req, res) {
 
+
                   // Form Validation
                   const { errors, isValid } = validateEmailSettingsInput(req.body);
 
@@ -650,6 +695,19 @@ module.exports = (app) => {
 
                   const { body } = req;
 
+                  var entry = {
+                    subject: body.subject,
+                    body: body.body,
+                  }
+
+                  if(req.files && req.files.file && req.files.file.data) {
+                    fs.writeFile('./upload/caleffi-privacy.pdf', req.files.file.data, function(err) {
+                        if(err) {
+                            handleError(err);
+                        }
+                    });
+                  }
+
                   EmailSettings.findOneAndUpdate({}, body, {upsert: true, new: true}, function(err, doc) {
                     if (err) {
                        return handleError(err);
@@ -657,9 +715,8 @@ module.exports = (app) => {
                     else {
                       return res.json({success: true});
                     }
-                  })
-                }
-            );
+                  });
+            });
 }
 
 handleError = function(err){

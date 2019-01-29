@@ -8,7 +8,7 @@ module.exports = function validateZoneInput(data) {
   data.name = !isEmpty(data.name) ? data.name : '';
 
   if (Validator.isEmpty(data.name)) {
-    errors.name = 'Name field is required';
+    errors.name = 'Il campo Nome è obbligatorio.';
   }
 
   return {
