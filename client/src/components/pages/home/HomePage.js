@@ -324,15 +324,11 @@ class HomePage extends Component {
 
           this.props.clearDocumentSearch();
         }
-    else {
-      console.log("here!!!");
-        this.performSearch();
-      }
   }
 
   filterChangeCallback = key => event => {
 
-    var filters = {...this.state.filters}
+    var filters = {...this.state.filters};
     filters[key] = event.target.value;
 
     this.setState({filters}, function () {
@@ -346,7 +342,8 @@ class HomePage extends Component {
         else {
           this.performSearch();
         }
-    });
+      }
+    );
   }
 
   /*--- Search Action ---*/
@@ -359,6 +356,7 @@ class HomePage extends Component {
     }
     this.props.searchDocument(params);
   }
+
 }
 
 HomePage.propTypes = {
