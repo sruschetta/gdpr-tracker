@@ -95,7 +95,7 @@ class CreateDialog extends Component {
               value={this.state.maintenance_type}
               error={Boolean(errors.maintenance_type)}
               helperText={errors.maintenance_type}
-              label={MAINTENANCE_TYPE}>
+              label={MAINTENANCE_TYPE  + '*'}>
                 {(this.props.maintenance_types) && (this.props.maintenance_types.map( (item, index) => (
                   <MenuItem key={ index + 1 } value={item._id}>
                     {item.title}
@@ -124,7 +124,7 @@ class CreateDialog extends Component {
               margin='normal'
               fullWidth
               autoComplete='new-password'
-              label={ADDRESS}
+              label={ADDRESS  + '*'}
               multiline
               rows='2'
               onChange={this.handleChange('address')}
@@ -135,7 +135,7 @@ class CreateDialog extends Component {
               margin='normal'
               fullWidth
               autoComplete='new-password'
-              label={CITY}
+              label={CITY  + '*'}
               onChange={this.handleChange('city')}
               value={this.state.city}
               error={Boolean(errors.city)}
@@ -144,7 +144,7 @@ class CreateDialog extends Component {
               margin='normal'
               fullWidth
               autoComplete='new-password'
-              label={PROVINCE}
+              label={PROVINCE  + '*'}
               onChange={this.handleChange('province')}
               value={this.state.province}
               error={Boolean(errors.province)}
@@ -163,7 +163,7 @@ class CreateDialog extends Component {
               margin='normal'
               fullWidth
               autoComplete='new-password'
-              label={REFERENCE}
+              label={REFERENCE + '*'}
               onChange={this.handleChange('reference')}
               error={Boolean(errors.reference)}
               value={this.state.reference}
@@ -223,7 +223,7 @@ class CreateDialog extends Component {
               margin='normal'
               fullWidth
               autoComplete='new-password'
-              label={GDPR_REFERENCE}
+              label={GDPR_REFERENCE + '*'}
               onChange={this.handleChange('gdpr_main_reference')}
               value={this.state.gdpr_main_reference}
               error={Boolean(errors.gdpr_main_reference)}
@@ -232,7 +232,7 @@ class CreateDialog extends Component {
               margin='normal'
               fullWidth
               autoComplete='new-password'
-              label={GDPR_REFERENCE_EMAIL}
+              label={GDPR_REFERENCE_EMAIL + '*'}
               onChange={this.handleChange('gdpr_main_reference_email')}
               error={Boolean(errors.gdpr_main_reference_email)}
               value={this.state.gdpr_main_reference_email}

@@ -106,7 +106,7 @@ module.exports = (app) => {
               payload,
               keys.secretOrKey,
               {
-                expiresIn: 6000
+                expiresIn: '120d'
               },
               (err, token) => {
                 if(!err){
