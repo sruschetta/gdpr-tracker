@@ -103,7 +103,9 @@ function sendMessage(auth) {
         resource: {
             raw: raw
         }
-    }, function(err, response) {});
+    }, function(err, response) {
+      console.log(err);
+    });
 }
 
 

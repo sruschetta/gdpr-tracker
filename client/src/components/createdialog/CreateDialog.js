@@ -195,8 +195,9 @@ class CreateDialog extends Component {
               error={Boolean(errors.zone)}
               helperText={errors.zone}
               value={this.state.zone} >
+              <MenuItem key={0} value={''}></MenuItem>
               {(this.props.zones) && this.props.zones.map( (item, index) => (
-                <MenuItem key={index} value={item._id}>
+                <MenuItem key={index + 1} value={item._id}>
                   {item.name}
                 </MenuItem>
               ))}
@@ -278,7 +279,7 @@ class CreateDialog extends Component {
             <Button onClick={this.saveAction} color="primary">
               {SAVE}
             </Button>
-            <Button onClick={this.props.closeCallback}>
+            <Button onClick={this.closeAction}>
               {CANCEL}
             </Button>
           </DialogActions>
@@ -288,6 +289,32 @@ class CreateDialog extends Component {
     else {
       return null;
     }
+  }
+
+  closeAction = () => {
+
+    this.setState({
+      _id: '',
+      ref_code: '',
+      building_name: '',
+      address: '',
+      city: '',
+      province: '',
+      extra: '',
+      reference: '',
+      reference_phone: '',
+      reference_mobile: '',
+      zone: '',
+      gdpr_main_reference: '',
+      gdpr_main_reference_email: '',
+      gdpr_main_reference_type: '',
+      gdpr_secondary_reference: '',
+      gdpr_secondary_reference_email: '',
+      gdpr_secondary_reference_type: '',
+      maintenance_type: '',
+    });
+
+    this.props.closeCallback();
   }
 
   saveAction = () => {
