@@ -28,6 +28,7 @@ class CreateDialog extends Component {
       _id: '',
       ref_code: '',
       building_name: '',
+      creation_date: null,
       address: '',
       city: '',
       province: '',
@@ -295,6 +296,7 @@ class CreateDialog extends Component {
 
     this.setState({
       _id: '',
+      creation_date: null,
       ref_code: '',
       building_name: '',
       address: '',
@@ -318,7 +320,14 @@ class CreateDialog extends Component {
   }
 
   saveAction = () => {
-    this.props.createCallback(this.state);
+
+    var d = new Date();
+
+    this.setState({creation_date: d}, function () {
+      this.props.createCallback(this.state);
+      }
+    );
+
   }
 }
 

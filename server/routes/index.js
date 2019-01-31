@@ -208,6 +208,7 @@ module.exports = (app) => {
           newDocument.reference = body.reference;
           newDocument.reference_phone = body.reference_phone;
           newDocument.zone = body.zone;
+          newDocument.province = body.province;
           newDocument.gdpr_main_reference = body.gdpr_main_reference;
           newDocument.gdpr_main_reference_email = body.gdpr_main_reference_email;
           newDocument.gdpr_main_reference_type = body.gdpr_main_reference_type;
