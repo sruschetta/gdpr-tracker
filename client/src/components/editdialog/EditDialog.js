@@ -48,7 +48,7 @@ class EditDialog extends Component {
   handleChange = name => event => {
 
     var value = event.target.value;
-
+    /*
     if(name === 'reference_phone') {
       value = value.replace(/[^0-9.]/g, '');
       if( value.length > this.state.reference_phone.length ) {
@@ -64,7 +64,7 @@ class EditDialog extends Component {
         }
       }
     }
-
+    */
     this.setState({
       [name]: value,
     });

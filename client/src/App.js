@@ -76,6 +76,11 @@ if (localStorage.jwtToken) {
 }
 
 class App extends Component {
+
+  componentWillMount(){
+    document.title = "GDPR Tracker";
+  }
+
   render() {
 
     return (
