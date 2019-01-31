@@ -26,6 +26,7 @@ class EditDialog extends Component {
     this.state = {
       _id: '',
       ref_code: '',
+      maintenance_type: '',
       building_name: '',
       address: '',
       city: '',
@@ -41,7 +42,6 @@ class EditDialog extends Component {
       gdpr_secondary_reference: '',
       gdpr_secondary_reference_email: '',
       gdpr_secondary_reference_type: '',
-      maintenance_type: '',
     }
   }
 

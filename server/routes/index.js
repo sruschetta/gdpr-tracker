@@ -202,13 +202,15 @@ module.exports = (app) => {
           newDocument.ref_code = body.ref_code;
           newDocument.maintenance_type = body.maintenance_type;
           newDocument.building_name = body.building_name;
+          newDocument.creation_date = body.creation_date;
           newDocument.address = body.address;
           newDocument.city = body.city;
+          newDocument.province = body.province;
           newDocument.extra = body.extra;
           newDocument.reference = body.reference;
           newDocument.reference_phone = body.reference_phone;
+          newDocument.reference_mobile = body.reference_mobile;
           newDocument.zone = body.zone;
-          newDocument.province = body.province;
           newDocument.gdpr_main_reference = body.gdpr_main_reference;
           newDocument.gdpr_main_reference_email = body.gdpr_main_reference_email;
           newDocument.gdpr_main_reference_type = body.gdpr_main_reference_type;
