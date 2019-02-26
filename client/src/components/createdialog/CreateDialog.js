@@ -293,7 +293,25 @@ class CreateDialog extends Component {
   }
 
   closeAction = () => {
+    this.clearState();
+    this.props.closeCallback();
+  }
 
+  saveAction = () => {
+
+    var d = new Date();
+
+    this.setState({creation_date: d}, function () {
+
+      var item = this.state;
+      this.props.createCallback(item);
+      this.props.closeCallback();
+      }
+    );
+  }
+
+
+  clearState = () => {
     this.setState({
       _id: '',
       creation_date: null,
@@ -315,20 +333,11 @@ class CreateDialog extends Component {
       gdpr_secondary_reference_type: '',
       maintenance_type: '',
     });
-
-    this.props.closeCallback();
-  }
-
-  saveAction = () => {
-
-    var d = new Date();
-
-    this.setState({creation_date: d}, function () {
-      this.props.createCallback(this.state);
-      }
-    );
-
   }
 }
+
+
+
+
 
 export default CreateDialog;

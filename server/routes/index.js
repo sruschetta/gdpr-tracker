@@ -235,9 +235,9 @@ module.exports = (app) => {
             //return res.json(body);
             var keyword = body.keyword;
 
-            if(keyword.length === 1 || keyword.length === 2) {
+            /*if(keyword.length === 1 || keyword.length === 2) {
               return res.status(400).json({errors: 'Search term is too short'});
-            }
+            }*/
 
             var filters = {};
 

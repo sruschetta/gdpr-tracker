@@ -195,7 +195,6 @@ class HomePage extends Component {
     this.setState({createDialogOpen: true});
   }
 
-
   /*---- List Item Callbacks ---*/
 
   listItemDeleteCallback = (item) => {
