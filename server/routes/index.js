@@ -18,6 +18,7 @@ const validateEmailSettingsInput = require('../validation/emailSettingsValidatio
 // Models
 const User = require('../models/user');
 const Document = require('../models/document');
+const OldDocument = require('../models/old_document');
 const MaintenanceType = require('../models/maintenance_type');
 const Zone = require('../models/zone');
 const ClientType = require('../models/client_type');
@@ -172,7 +173,7 @@ module.exports = (app) => {
             orderBy = 'creation_date';
           }
 
-          Document.count().then( (count) => {
+          Document.countDocuments().then( (count) => {
             Document.find().skip(page).limit(50).sort({[orderBy]: order}).then( documents => {
 
               return res.json({
@@ -235,9 +236,9 @@ module.exports = (app) => {
             //return res.json(body);
             var keyword = body.keyword;
 
-            /*if(keyword.length === 1 || keyword.length === 2) {
+            if(keyword.length <= 2) {
               return res.status(400).json({errors: 'Search term is too short'});
-            }*/
+            }
 
             var filters = {};
 
@@ -256,7 +257,7 @@ module.exports = (app) => {
 
             if(keyword.length === 0) {
 
-              Document.find(filters).count().then( (count) => {
+              Document.find(filters).countDocuments().then( (count) => {
                 Document.find(filters).exec(function(err, documents) {
 
                       return res.json({
@@ -282,7 +283,7 @@ module.exports = (app) => {
                                  { gdpr_secondary_reference_email: { $regex: re }},
                                 ];
 
-              Document.find(filters).or(conditions).count().then( (count) => {
+              Document.find(filters).or(conditions).countDocuments().then( (count) => {
                 Document.find(filters).or(conditions).exec(function(err, documents) {
                           return res.json({
                             documents: documents,
@@ -290,7 +291,6 @@ module.exports = (app) => {
                           });
                 })
               });
-
           }
       });
 
@@ -720,6 +720,216 @@ module.exports = (app) => {
                     }
                   });
             });
+
+            /*
+            *
+            * OLD DOCUMENTS
+            *
+            */
+
+            app.get('/api/old_document',
+
+              passport.authenticate("jwt", { session: false }),
+                function(req, res) {
+
+                  var page = req.query.page;
+                  var order = req.query.order;
+                  var orderBy = req.query.orderBy;
+
+                  if(page === "undefined") {
+                    page = 0;
+                  }
+                  else {
+                    page = page*50;
+                  }
+
+                  if(order === "undefined") {
+                    order = 'desc';
+                  }
+
+                  if(orderBy === "undefined") {
+                    orderBy = 'creation_date';
+                  }
+
+                  OldDocument.countDocuments().then( (count) => {
+                    OldDocument.find().skip(page).limit(50).sort({[orderBy]: order}).then( documents => {
+                      return res.json({
+                        old_documents: documents,
+                        old_count: count
+                      });
+                    });
+                  });
+                }
+            );
+
+
+            app.post('/api/old_document/search',
+              passport.authenticate('jwt', {session: false}),
+                function(req, res) {
+
+                  var {body} = req;
+
+                  //return res.json(body);
+                  var keyword = body.keyword;
+
+                  if(keyword.length <= 2 ) {
+                    return res.status(400).json({errors: 'Search term is too short'});
+                  }
+
+                  var filters = {};
+
+                  if(body.filters){
+
+                    if(body.filters.userFilter) {
+                      filters.creator = body.filters.userFilter;
+                    }
+                    if(body.filters.maintenanceTypeFilter) {
+                      filters.maintenance_type = body.filters.maintenanceTypeFilter;
+                    }
+                    if(body.filters.zoneFilter) {
+                      filters.zone = body.filters.zoneFilter;
+                    }
+                  }
+
+                  if(keyword.length === 0) {
+
+                    OldDocument.find(filters).countDocuments().then( (count) => {
+                      OldDocument.find(filters).exec(function(err, documents) {
+
+                            return res.json({
+                              documents: documents,
+                              count: count
+                            });
+                      })
+                    });
+                  }
+                  else {
+
+                    var re = new RegExp(keyword, 'i');
+
+                    var conditions = [ { ref_code: { $regex: re }},
+                                       { building_name: { $regex: re }},
+                                       { address: { $regex: re }},
+                                       { city: { $regex: re }},
+                                       { extra: { $regex: re }},
+                                       { reference: { $regex: re }},
+                                       { gdpr_main_reference: { $regex: re }},
+                                       { gdpr_main_reference_email: { $regex: re }},
+                                       { gdpr_secondary_reference: { $regex: re }},
+                                       { gdpr_secondary_reference_email: { $regex: re }},
+                                      ];
+
+                    OldDocument.find(filters).or(conditions).countDocuments().then( (count) => {
+                      OldDocument.find(filters).or(conditions).exec(function(err, documents) {
+                                return res.json({
+                                  documents: documents,
+                                  count: count
+                                });
+                      })
+                    });
+                }
+            });
+
+
+            app.delete('/api/old_document/:documentId',
+              passport.authenticate('jwt', {session:false}),
+                function(req, res) {
+
+                  // Form validation
+                  const { errors, isValid } = validateDocumentDeletion(req.params.documentId);
+
+                  // Check validation
+                  if (!isValid) {
+                    return res.status(400).json(errors);
+                  }
+
+                  const { params } = req;
+                  OldDocument.deleteOne({ _id: params.documentId }, function (err) {
+                    if (err) {
+                       return handleError(err);
+                    }
+                    else {
+                      return res.json({success: true});
+                    }
+                  });
+            });
+
+            app.put('/api/old_document/:documentId',
+              passport.authenticate('jwt', {session:false}),
+              function(req, res){
+
+                const { params, body } = req;
+
+                //Form Validation
+                const { errors, isValid } = validateDocumentInput(body);
+
+                // Check validation
+                if(!isValid) {
+                  return res.status(400).json(errors);
+                }
+
+                OldDocument.findByIdAndUpdate(params.documentId, {$set: body}, {new: false, useFindAndModify: false}, function(err, model) {
+                  if (err) {
+                     return handleError(err);
+                  }
+                  else {
+                    return res.json({success: true});
+                  }
+                });
+            });
+
+            app.post('/api/old_document/:documentId/send',
+              passport.authenticate('jwt', {session: false}),
+                function(req,res) {
+
+                  OldDocument.findById(req.params.documentId , function(err, oldDocument) {
+                    if (err) {
+                       return handleError(err);
+                    }
+                    var email = oldDocument.gdpr_main_reference_email;
+                    if(!email)
+                    {
+                      return handleError("Empty email address!");
+                    }
+
+                    OldDocument.find({gdpr_main_reference_email: email}, function(err, oldDocuments){
+                        if (err) {
+                           return handleError(err);
+                        }
+
+                        var d = new Date();
+
+                        for (i = 0; i < oldDocuments.length; i++){
+                          oldDocuments[i]["send_date"] = d;
+                        }
+
+                        Document.insertMany(oldDocuments, function(err, documents) {
+                          if (err) {
+                             return handleError(err);
+                          }
+
+                          var allIds = [];
+                          for (i = 0; i < oldDocuments.length; i++){
+                            allIds[i] = oldDocuments[i]["_id"];
+                          }
+
+                          OldDocument.deleteMany({_id: {$in: allIds}}, function(err) {
+                              if(err) {
+                                  return handleError(er);
+                              }
+
+                              //Send email
+                              EmailSettings.findOne().then( item => {
+                                sendEmail(email, item.subject, item.body);
+                                return res.json({success: true});
+                              });
+                          });
+                        });
+                     });
+                  });
+                }
+            );
+
 }
 
 handleError = function(err){

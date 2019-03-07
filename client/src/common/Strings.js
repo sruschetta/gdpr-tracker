@@ -70,6 +70,10 @@ export const CLIENT_TYPE = "Tipologia referente";
 export const CLIENT_TYPES = "Tipologie referenti";
 export const NEW_CLIENT_TYPE = "Nuova tipologia referente";
 
+//Old documents
+
+export const OLD_DOCUMENTS = "Pregresso";
+
 //Email
 
 export const EMAIL_SETTINGS = "Gestione email";

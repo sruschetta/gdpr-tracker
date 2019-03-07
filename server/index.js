@@ -3,6 +3,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
 const passport = require("passport");
+const fs = require("fs");
+
+const importCSV = require('./csv/importer');
 
 mongoose.connect('mongodb://127.0.0.1/documents', { useNewUrlParser: true,  useCreateIndex: true })
   .then(() => console.log(`Database connected successfully`))
@@ -23,11 +26,22 @@ require('./routes')(app);
 app.use(passport.initialize());
 require("./config/passport")(passport);
 
+
 var server = app.listen(port, function(err){
   if(err) {
     console.log('Express error: ' + err);
   }
   console.log('Server started');
+});
+
+var dir = './csv/files';
+
+fs.readdir(dir, function(err, items) {
+
+    for (var i=0; i<items.length; i++) {
+        var year = (items[i]).match( /20\d{2}/g)[0];
+        importCSV(dir + '/' + items[i], new Date(year, 0, 1));
+    }
 });
 
 

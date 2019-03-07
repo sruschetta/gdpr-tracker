@@ -30,6 +30,12 @@ import {
   CLEAR_DOCUMENT_SEARCH,
   GET_EMAIL_SETTINGS,
   UPDATE_EMAIL_SETTINGS,
+  GET_OLD_DOCUMENTS,
+  SEARCH_OLD_DOCUMENT,
+  CLEAR_OLD_DOCUMENT_SEARCH,
+  UPDATE_OLD_DOCUMENT,
+  DELETE_OLD_DOCUMENT,
+  SEND_EMAIL_OLD_DOCUMENT
 } from "./types";
 
 
@@ -540,4 +546,99 @@ export const updateEmailSettings = formData => dispatch => {
       payload: err.response.data
     })
   });
+}
+
+
+
+//Old Documents
+
+export const getOldDocuments = (page, order, orderBy) => dispatch => {
+  axios
+    .get("/api/old_document?page=" + page + "&order=" + order + "&orderBy=" + orderBy)
+    .then(res => {
+      dispatch({
+        type: GET_OLD_DOCUMENTS,
+        payload: res.data
+      })
+    }
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+export const searchOldDocument = params => dispatch => {
+
+  axios.post('/api/old_document/search', params )
+    .then(function(res){
+      dispatch({
+        type: SEARCH_OLD_DOCUMENT,
+        payload: res.data
+      })
+    });
+};
+
+export const clearOldDocumentSearch = () => dispatch => {
+
+  dispatch({
+    type: CLEAR_OLD_DOCUMENT_SEARCH
+  });
+
+}
+
+// Delete old document
+export const deleteOldDocument = document => dispatch => {
+  axios.delete('/api/old_document/' + document._id)
+  .then(res => {
+    dispatch({
+      type: DELETE_OLD_DOCUMENT,
+      payload: res.data
+    });
+  })
+  .catch(err =>
+    dispatch({
+      type: GET_ERRORS,
+      payload: err.response.data
+    })
+  );
+};
+
+
+//Update old document
+export const updateOldDocument = document => dispatch => {
+  axios.put('/api/old_document/' + document._id, document)
+  .then(res => {
+    dispatch({
+      type: UPDATE_OLD_DOCUMENT,
+      payload: res.data
+    });
+  })
+  .catch(err =>
+    dispatch({
+      type: GET_ERRORS,
+      payload: err.response.data
+    })
+  );
+}
+
+
+//Send old document email
+
+export const sendOldDocumentEmail = document => dispatch => {
+  axios.post('/api/old_document/' + document._id + '/send')
+  .then(res => {
+    dispatch({
+      type: SEND_EMAIL_OLD_DOCUMENT,
+      payload: res.data
+    });
+  })
+  .catch(err =>
+    dispatch({
+      type: GET_ERRORS,
+      payload: err.response.data
+    })
+  );
 }

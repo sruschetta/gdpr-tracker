@@ -73,73 +73,78 @@ class SearchToolbar extends Component {
                       </InputAdornment>
                     )
                   }}/>
-          <IconButton onClick={this.openFilter}>
-            <FilterListIcon />
-          </IconButton>
+                  {
+                    (this.props.filters) && (
+                        <IconButton onClick={this.openFilter}>
+                          <FilterListIcon />
+                        </IconButton> )
+                  }
           <IconButton onClick={this.openViewColumns}>
             <ViewColumnIcon />
           </IconButton>
-         <Menu
-              anchorEl={this.state.filterAnchor}
-              open={Boolean(this.state.filterAnchor)}
-              onClose={this.handleFilterClose} >
-              <List className={classes.filter}>
-                <ListItem>
-                  <TextField
-                    fullWidth
-                    label={CREATOR}
-                    select
-                    value={this.props.filters.userFilter}
-                    onChange={this.props.filterChangeCallback('userFilter')} >
-                    <MenuItem key={0} value=''></MenuItem>
-                    {
-                    (users) &&
-                        users.map( (user, index) => {
-                          return(
-                            <MenuItem key={index + 1} value={user._id}>{user.name + " " + user.surname}</MenuItem>
-                          )
-                        })
-                    }
-                  </TextField>
-                </ListItem>
-                <ListItem>
-                  <TextField
-                    fullWidth
-                    label={ZONE}
-                    select
-                    value={this.props.filters.zoneFilter}
-                    onChange={this.props.filterChangeCallback('zoneFilter')} >
-                      <MenuItem key={0} value=''></MenuItem>
-                      {
-                      (zones) &&
-                          zones.map( (zone, index) => {
-                            return(
-                              <MenuItem key={index + 1} value={zone._id}>{zone.name}</MenuItem>
-                            )
-                          })
-                      }
-                  </TextField>
-                </ListItem>
-                <ListItem>
-                  <TextField
-                    fullWidth
-                    label={MAINTENANCE_TYPES}
-                    select
-                    value={this.props.filters.maintenanceTypeFilter}
-                    onChange={this.props.filterChangeCallback('maintenanceTypeFilter')} >
-                      <MenuItem key={0} value=''></MenuItem>
-                      {
-                      (maintenance_types) &&
-                          maintenance_types.map( (type, index) => {
-                            return(
-                              <MenuItem key={index + 1} value={type._id}>{type.title}</MenuItem>
-                            )
-                          })
-                      }
-                  </TextField>
-                </ListItem>
-              </List>
-            </Menu>
+          { (this.props.filters) &&
+               (<Menu
+                    anchorEl={this.state.filterAnchor}
+                    open={Boolean(this.state.filterAnchor)}
+                    onClose={this.handleFilterClose} >
+                    <List className={classes.filter}>
+                      <ListItem>
+                        <TextField
+                          fullWidth
+                          label={CREATOR}
+                          select
+                          value={this.props.filters.userFilter}
+                          onChange={this.props.filterChangeCallback('userFilter')} >
+                          <MenuItem key={0} value=''></MenuItem>
+                          {
+                          (users) &&
+                              users.map( (user, index) => {
+                                return(
+                                  <MenuItem key={index + 1} value={user._id}>{user.name + " " + user.surname}</MenuItem>
+                                )
+                              })
+                          }
+                        </TextField>
+                      </ListItem>
+                      <ListItem>
+                        <TextField
+                          fullWidth
+                          label={ZONE}
+                          select
+                          value={this.props.filters.zoneFilter}
+                          onChange={this.props.filterChangeCallback('zoneFilter')} >
+                            <MenuItem key={0} value=''></MenuItem>
+                            {
+                            (zones) &&
+                                zones.map( (zone, index) => {
+                                  return(
+                                    <MenuItem key={index + 1} value={zone._id}>{zone.name}</MenuItem>
+                                  )
+                                })
+                            }
+                        </TextField>
+                      </ListItem>
+                      <ListItem>
+                        <TextField
+                          fullWidth
+                          label={MAINTENANCE_TYPES}
+                          select
+                          value={this.props.filters.maintenanceTypeFilter}
+                          onChange={this.props.filterChangeCallback('maintenanceTypeFilter')} >
+                            <MenuItem key={0} value=''></MenuItem>
+                            {
+                            (maintenance_types) &&
+                                maintenance_types.map( (type, index) => {
+                                  return(
+                                    <MenuItem key={index + 1} value={type._id}>{type.title}</MenuItem>
+                                  )
+                                })
+                            }
+                        </TextField>
+                      </ListItem>
+                    </List>
+                  </Menu>)
+              }
           <Menu
             anchorEl={this.state.viewColumnAnchor}
             open={Boolean(this.state.viewColumnAnchor)}

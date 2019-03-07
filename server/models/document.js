@@ -51,10 +51,6 @@ const DocumentSchema = new Schema({
     type: String,
     default: ''
   },
-  zone: {
-    type: String,
-    default: ''
-  },
   creation_date: {
     type: Date,
     default: new Date()

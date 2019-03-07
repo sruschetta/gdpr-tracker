@@ -18,6 +18,7 @@ import Drawer from '@material-ui/core/Drawer';
 import Typography from '@material-ui/core/Typography';
 
 import HomePage from '../pages/home/HomePage';
+import OldDocumentsPage from '../pages/olddocuments/OldDocumentsPage';
 import LoginPage from '../pages/login/LoginPage';
 import RegisterPage from '../pages/register/RegisterPage';
 import MaintenancePage from '../pages/maintenance/MaintenancePage';
@@ -34,7 +35,7 @@ import { connect } from "react-redux";
 import { logoutUser } from "../../actions/authActions";
 
 
-import { HOME, ZONES, MAINTENANCE_TYPES, CLIENT_TYPES, EMAIL_SETTINGS, LOGOUT } from '../../common/Strings';
+import { HOME, ZONES, MAINTENANCE_TYPES, CLIENT_TYPES, EMAIL_SETTINGS, LOGOUT, OLD_DOCUMENTS } from '../../common/Strings';
 
 const styles = {
   list: {
@@ -56,8 +57,16 @@ class Root extends Component {
     super();
 
     this.state = {
-      menuOpen: false
+      menuOpen: false,
+      barColor: "secondary"
     }
+  }
+
+
+  componentWillReceiveProps(props){
+    this.setState({
+      barColor: ((window.location.pathname === '/old_documents')?"secondary":"primary")
+    });
   }
 
   render(){
@@ -70,7 +79,7 @@ class Root extends Component {
       {
         (auth && auth.isAuthenticated && (
           <div>
-          <AppBar>
+          <AppBar color={this.state.barColor}>
             <Toolbar>
               <IconButton color='inherit' onClick={this.toggleMenu}><MenuIcon/></IconButton>
               <Typography variant="h6" color="inherit">
@@ -87,6 +96,7 @@ class Root extends Component {
         </div>
         <List className={classes.list}>
           <ListItem button component={Link} to='/' onClick={() => this.toggleMenu()}>{HOME}</ListItem>
+          <ListItem button component={Link} to='/old_documents' onClick={() => this.toggleMenu()}>{OLD_DOCUMENTS}</ListItem>
           <ListItem button component={Link} to='/zone' onClick={() =>this.toggleMenu()}>{ZONES}</ListItem>
           <ListItem button component={Link} to='/maintenance' onClick={() => this.toggleMenu()}>{MAINTENANCE_TYPES}</ListItem>
           <ListItem button component={Link} to='/client' onClick={() => this.toggleMenu()}>{CLIENT_TYPES}</ListItem>
@@ -103,6 +113,7 @@ class Root extends Component {
             <PrivateRoute exact path='/zone' component={ZonePage} />
             <PrivateRoute exact path='/client' component={ClientPage} />
             <PrivateRoute exact path='/' component={HomePage} />
+            <PrivateRoute exact path='/old_documents' component={OldDocumentsPage} />
             <PrivateRoute exact path='/email' component={EmailPage} />
           </Switch>
         </div>

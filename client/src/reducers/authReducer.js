@@ -25,7 +25,13 @@ import {
   SEARCH_DOCUMENT,
   CLEAR_DOCUMENT_SEARCH,
   GET_EMAIL_SETTINGS,
-  UPDATE_EMAIL_SETTINGS
+  UPDATE_EMAIL_SETTINGS,
+  GET_OLD_DOCUMENTS,
+  SEARCH_OLD_DOCUMENT,
+  CLEAR_OLD_DOCUMENT_SEARCH,
+  UPDATE_OLD_DOCUMENT,
+  DELETE_OLD_DOCUMENT,
+  SEND_EMAIL_OLD_DOCUMENT
 } from "../actions/types";
 
 
@@ -189,6 +195,41 @@ export default function(state = initialState, action) {
         ...state,
         reload: true,
       }
+    case GET_OLD_DOCUMENTS:
+      return {
+        ...state,
+        old_documents: action.payload.old_documents,
+        old_count: action.payload.old_count,
+        reload: false,
+      }
+    case SEARCH_OLD_DOCUMENT:
+      return {
+        ...state,
+        s_old_documents: action.payload.documents,
+        s_old_count: action.payload.count,
+        reload: false,
+      }
+    case CLEAR_OLD_DOCUMENT_SEARCH:
+        return {
+          ...state,
+          s_old_documents: null,
+          reload: false,
+        }
+    case DELETE_OLD_DOCUMENT:
+      return {
+          ...state,
+          reload: true,
+      }
+    case UPDATE_OLD_DOCUMENT:
+      return {
+          ...state,
+          reload: true,
+      }
+      case SEND_EMAIL_OLD_DOCUMENT:
+        return {
+          ...state,
+          reload: true
+        }
     default:
       return state;
   }
