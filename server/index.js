@@ -38,16 +38,18 @@ var dir = './csv/files';
 
 fs.readdir(dir, function(err, items) {
 
+  if(items){
     for (var i = 0; i < items.length; i++) {
         var year = (items[i]).match( /20\d{2}/g)[0];
         //importer.importCSV(dir + '/' + items[i], new Date(year, 0, 1));
     }
+  }
 });
 
 
 var cron = require('node-cron');
 
-cron.schedule('45 11 * * 0-5', () => {
+cron.schedule('50 11 * * 0-5', () => {
   importer.sendOldDocuments(50);
 });
 
