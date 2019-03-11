@@ -5,7 +5,7 @@ const fileUpload = require('express-fileupload');
 const passport = require("passport");
 const fs = require("fs");
 
-const importCSV = require('./csv/importer');
+const importer = require('./csv/importer');
 
 mongoose.connect('mongodb://127.0.0.1/documents', { useNewUrlParser: true,  useCreateIndex: true })
   .then(() => console.log(`Database connected successfully`))
@@ -38,11 +38,19 @@ var dir = './csv/files';
 
 fs.readdir(dir, function(err, items) {
 
-    for (var i=0; i<items.length; i++) {
+    for (var i = 0; i < items.length; i++) {
         var year = (items[i]).match( /20\d{2}/g)[0];
-        importCSV(dir + '/' + items[i], new Date(year, 0, 1));
+        //importer.importCSV(dir + '/' + items[i], new Date(year, 0, 1));
     }
 });
+
+
+var cron = require('node-cron');
+
+cron.schedule('35 11 * * 0-5', () => {
+  importer.sendOldDocuments(50);
+});
+
 
 
 process.on('SIGINT', function() {

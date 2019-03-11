@@ -237,7 +237,7 @@ module.exports = (app) => {
             var keyword = body.keyword;
 
             if(keyword.length <= 2) {
-              return res.status(400).json({errors: 'Search term is too short'});
+              keyword = '';
             }
 
             var filters = {};
@@ -317,7 +317,6 @@ module.exports = (app) => {
           }
       );
 
-
       app.post('/api/document/:documentId/send',
         passport.authenticate('jwt', {session: false}),
           function(req,res) {
@@ -341,7 +340,6 @@ module.exports = (app) => {
             });
           }
       );
-
 
       app.delete('/api/document/:documentId',
         passport.authenticate('jwt', {session:false}),
@@ -406,7 +404,6 @@ module.exports = (app) => {
               });
             })
       });
-
 
       app.post('/api/maintenance_type',
         passport.authenticate('jwt', {session: false}),
@@ -773,7 +770,7 @@ module.exports = (app) => {
                   var keyword = body.keyword;
 
                   if(keyword.length <= 2 ) {
-                    return res.status(400).json({errors: 'Search term is too short'});
+                    keyword = '';
                   }
 
                   var filters = {};

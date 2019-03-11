@@ -1,13 +1,16 @@
 const csv = require('csvtojson');
 
 const OldDocument = require('../models/old_document');
-
+const Document = require('../models/document');
 const ClientType = require('../models/client_type');
 
 const fs = require('fs');
 
+const EmailSettings = require('../models/email_settings');
+const sendEmail = require('../email/email');
 
-module.exports = function importCSV(csvFilePath, date){
+
+module.exports.importCSV = function(csvFilePath, date){
 
   csv({
     noheader: false,
@@ -94,9 +97,6 @@ module.exports = function importCSV(csvFilePath, date){
           }
         }
 
-        if(!email){
-          console.log("email missing!");
-        }
         oldDocument.save()
                    .then()
                    .catch(err => handleError(err));
@@ -104,6 +104,119 @@ module.exports = function importCSV(csvFilePath, date){
     });
   });
 }
+
+module.exports.sendOldDocuments = function(num) {
+
+  var counter = 0;
+
+  var timer = setInterval(function(){
+
+    if(counter < num) {
+
+      counter ++;
+
+      OldDocument.findOne( {"gdpr_main_reference_email": {"$ne": ""}}).sort({"creation_date": "desc"}).then( (oldDocument) => {
+
+        var email = oldDocument.gdpr_main_reference_email;
+        if(!email) {
+          return handleError("Empty email address!");
+        }
+
+        OldDocument.find({gdpr_main_reference_email: email}, function(err, oldDocuments){
+            if (err) {
+               return handleError(err);
+            }
+
+            var d = new Date();
+
+            for (i = 0; i < oldDocuments.length; i++){
+              oldDocuments[i]["send_date"] = d;
+            }
+
+            Document.insertMany(oldDocuments, function(err, documents) {
+              if (err) {
+                 return handleError(err);
+              }
+
+              var allIds = [];
+              for (i = 0; i < oldDocuments.length; i++){
+                allIds[i] = oldDocuments[i]["_id"];
+              }
+
+              OldDocument.deleteMany({_id: {$in: allIds}}, function(err) {
+                  if(err) {
+                      return handleError(er);
+                  }
+
+                  //Send email
+                  EmailSettings.findOne().then( item => {
+                    sendEmail(email, item.subject, item.body);
+                  });
+
+              });
+           });
+        });
+      });
+    }
+    else {
+      clearInterval(timer);
+    }
+  }, 30000);
+
+
+
+  /*
+
+  OldDocument.findById(req.params.documentId , function(err, oldDocument) {
+    if (err) {
+       return handleError(err);
+    }
+    var email = oldDocument.gdpr_main_reference_email;
+    if(!email)
+    {
+      return handleError("Empty email address!");
+    }
+
+    OldDocument.find({gdpr_main_reference_email: email}, function(err, oldDocuments){
+        if (err) {
+           return handleError(err);
+        }
+
+        var d = new Date();
+
+        for (i = 0; i < oldDocuments.length; i++){
+          oldDocuments[i]["send_date"] = d;
+        }
+
+        Document.insertMany(oldDocuments, function(err, documents) {
+          if (err) {
+             return handleError(err);
+          }
+
+          var allIds = [];
+          for (i = 0; i < oldDocuments.length; i++){
+            allIds[i] = oldDocuments[i]["_id"];
+          }
+
+          OldDocument.deleteMany({_id: {$in: allIds}}, function(err) {
+              if(err) {
+                  return handleError(er);
+              }
+
+              //Send email
+              EmailSettings.findOne().then( item => {
+                sendEmail(email, item.subject, item.body);
+                return res.json({success: true});
+              });
+          });
+        });
+     });
+   });
+
+   */
+}
+
+
 
 function validateEmail(email) {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
