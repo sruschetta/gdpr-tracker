@@ -148,7 +148,7 @@ module.exports.sendOldDocuments = function(num) {
                   if(err) {
                       return handleError(er);
                   }
-                  
+
                   //Check if the selected email exists in current Documents (avoiding double send)
                   Document.findOne({gdpr_main_reference_email: email}, function(err, document){
                     if(err) {
@@ -161,7 +161,7 @@ module.exports.sendOldDocuments = function(num) {
                         sendEmail(email, item.subject, item.body);
                       });
                     }
-                  }
+                  });
               });
            });
         });
