@@ -49,7 +49,7 @@ fs.readdir(dir, function(err, items) {
 
 var cron = require('node-cron');
 
-cron.schedule('30 10 * * 0-5', () => {
+cron.schedule('00 13 * * 0-5', () => {
   importer.sendOldDocuments(50);
 });
 
