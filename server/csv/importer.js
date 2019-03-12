@@ -122,6 +122,7 @@ module.exports.sendOldDocuments = function(num) {
           return handleError("Empty email address!");
         }
 
+
         OldDocument.find({gdpr_main_reference_email: email}, function(err, oldDocuments){
             if (err) {
                return handleError(err);
@@ -147,12 +148,20 @@ module.exports.sendOldDocuments = function(num) {
                   if(err) {
                       return handleError(er);
                   }
+                  
+                  //Check if the selected email exists in current Documents (avoiding double send)
+                  Document.findOne({gdpr_main_reference_email: email}, function(err, document){
+                    if(err) {
+                      return handleError(err);
+                    }
 
-                  //Send email
-                  EmailSettings.findOne().then( item => {
-                    sendEmail(email, item.subject, item.body);
-                  });
-
+                    if(!document) {
+                      //Send email
+                      EmailSettings.findOne().then( item => {
+                        sendEmail(email, item.subject, item.body);
+                      });
+                    }
+                  }
               });
            });
         });

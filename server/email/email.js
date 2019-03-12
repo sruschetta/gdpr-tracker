@@ -104,7 +104,9 @@ function sendMessage(auth) {
             raw: raw
         }
     }, function(err, response) {
-      console.log(err);
+      if(err) {
+        console.log(err);
+      }
     });
 }
 
