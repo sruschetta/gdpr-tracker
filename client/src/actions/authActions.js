@@ -35,7 +35,8 @@ import {
   CLEAR_OLD_DOCUMENT_SEARCH,
   UPDATE_OLD_DOCUMENT,
   DELETE_OLD_DOCUMENT,
-  SEND_EMAIL_OLD_DOCUMENT
+  SEND_EMAIL_OLD_DOCUMENT,
+  CLOSE_EDIT
 } from "./types";
 
 
@@ -641,4 +642,13 @@ export const sendOldDocumentEmail = document => dispatch => {
       payload: err.response.data
     })
   );
+}
+
+
+//Edit  close
+export const closeEdit = () => dispatch => {
+
+  dispatch({
+    type: CLOSE_EDIT
+  });
 }

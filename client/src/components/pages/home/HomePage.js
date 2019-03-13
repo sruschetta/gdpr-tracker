@@ -18,7 +18,7 @@ import { REF_CODE, BUILDING_NAME, ADDRESS, CITY, PROVINCE, EXTRA, REFERENCE, REF
 
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { addDocument, logoutUser, getDocuments, deleteDocument, updateDocument, sendDocumentEmail,
+import { addDocument, logoutUser, getDocuments, deleteDocument, updateDocument, sendDocumentEmail, closeEdit,
          getMaintenanceTypes, getClientTypes, getZones, getUsers, setPageTitle, searchDocument, clearDocumentSearch } from "../../../actions/authActions";
 
 
@@ -120,6 +120,9 @@ class HomePage extends Component {
       });
 
       this.props.getDocuments();
+      if(nextProps.auth.s_documents) {
+        this.performSearch();
+      }
     }
   }
 
@@ -218,6 +221,7 @@ class HomePage extends Component {
 
   editDialogCloseCallback = () => {
     this.setState({editDialogTarget: null});
+    this.props.closeEdit();
   }
 
 
@@ -371,6 +375,7 @@ HomePage.propTypes = {
   getUsers: PropTypes.func.isRequired,
   setPageTitle: PropTypes.func.isRequired,
   searchDocument: PropTypes.func.isRequired,
+  closeEdit: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
 };
@@ -382,6 +387,6 @@ const mapStateToProps = state => ({
 
 export default withStyles(styles)(connect( mapStateToProps, { logoutUser, getDocuments, addDocument,
                                                               deleteDocument, updateDocument,
-                                                              sendDocumentEmail,
+                                                              sendDocumentEmail, closeEdit,
                                                               getMaintenanceTypes, getZones, searchDocument, clearDocumentSearch,
                                                               getClientTypes, getUsers, setPageTitle })(HomePage));

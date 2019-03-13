@@ -122,48 +122,47 @@ module.exports.sendOldDocuments = function(num) {
           return handleError("Empty email address!");
         }
 
+        Document.findOne({gdpr_main_reference_email: email}, function(err, existingDocument){
+          if(err) {
+            return handleError(err);
+          }
 
-        OldDocument.find({gdpr_main_reference_email: email}, function(err, oldDocuments){
-            if (err) {
-               return handleError(err);
-            }
-
-            var d = new Date();
-
-            for (i = 0; i < oldDocuments.length; i++){
-              oldDocuments[i]["send_date"] = d;
-            }
-
-            Document.insertMany(oldDocuments, function(err, documents) {
+          OldDocument.find({gdpr_main_reference_email: email}, function(err, oldDocuments){
               if (err) {
                  return handleError(err);
               }
 
-              var allIds = [];
+              var d = new Date();
+
               for (i = 0; i < oldDocuments.length; i++){
-                allIds[i] = oldDocuments[i]["_id"];
+                oldDocuments[i]["send_date"] = d;
               }
 
-              OldDocument.deleteMany({_id: {$in: allIds}}, function(err) {
-                  if(err) {
-                      return handleError(er);
-                  }
+              Document.insertMany(oldDocuments, function(err, documents) {
+                if (err) {
+                   return handleError(err);
+                }
 
-                  //Check if the selected email exists in current Documents (avoiding double send)
-                  /*Document.findOne({gdpr_main_reference_email: email}, function(err, document){
+                var allIds = [];
+                for (i = 0; i < oldDocuments.length; i++){
+                  allIds[i] = oldDocuments[i]["_id"];
+                }
+
+                OldDocument.deleteMany({_id: {$in: allIds}}, function(err) {
                     if(err) {
-                      return handleError(err);
+                        return handleError(er);
                     }
 
-                    if(!document) {*/
+                    //Check if the selected email exists in current Documents (avoiding double send)
+                    if(!existingDocument) {
                       //Send email
                       EmailSettings.findOne().then( item => {
                         sendEmail(email, item.subject, item.body);
                       });
-                    //}
-                  //});
-              });
-           });
+                    }
+                });
+             });
+          });
         });
       });
     }
@@ -171,58 +170,6 @@ module.exports.sendOldDocuments = function(num) {
       clearInterval(timer);
     }
   }, 30000);
-
-
-
-  /*
-
-  OldDocument.findById(req.params.documentId , function(err, oldDocument) {
-    if (err) {
-       return handleError(err);
-    }
-    var email = oldDocument.gdpr_main_reference_email;
-    if(!email)
-    {
-      return handleError("Empty email address!");
-    }
-
-    OldDocument.find({gdpr_main_reference_email: email}, function(err, oldDocuments){
-        if (err) {
-           return handleError(err);
-        }
-
-        var d = new Date();
-
-        for (i = 0; i < oldDocuments.length; i++){
-          oldDocuments[i]["send_date"] = d;
-        }
-
-        Document.insertMany(oldDocuments, function(err, documents) {
-          if (err) {
-             return handleError(err);
-          }
-
-          var allIds = [];
-          for (i = 0; i < oldDocuments.length; i++){
-            allIds[i] = oldDocuments[i]["_id"];
-          }
-
-          OldDocument.deleteMany({_id: {$in: allIds}}, function(err) {
-              if(err) {
-                  return handleError(er);
-              }
-
-              //Send email
-              EmailSettings.findOne().then( item => {
-                sendEmail(email, item.subject, item.body);
-                return res.json({success: true});
-              });
-          });
-        });
-     });
-   });
-
-   */
 }
 
 

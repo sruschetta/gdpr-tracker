@@ -31,7 +31,8 @@ import {
   CLEAR_OLD_DOCUMENT_SEARCH,
   UPDATE_OLD_DOCUMENT,
   DELETE_OLD_DOCUMENT,
-  SEND_EMAIL_OLD_DOCUMENT
+  SEND_EMAIL_OLD_DOCUMENT,
+  CLOSE_EDIT
 } from "../actions/types";
 
 
@@ -225,11 +226,18 @@ export default function(state = initialState, action) {
           ...state,
           reload: true,
       }
-      case SEND_EMAIL_OLD_DOCUMENT:
-        return {
-          ...state,
-          reload: true
-        }
+    case SEND_EMAIL_OLD_DOCUMENT:
+      return {
+        ...state,
+        reload: true
+      }
+
+    case CLOSE_EDIT:
+      delete state.errors;
+      return {
+        ...state
+      }
+
     default:
       return state;
   }

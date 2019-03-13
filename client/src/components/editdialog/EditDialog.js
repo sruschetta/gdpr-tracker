@@ -72,29 +72,31 @@ class EditDialog extends Component {
   };
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps.target) {
+
+    if( nextProps.target && (Object.keys(nextProps.errors).length === 0) ) {
       const {target} = nextProps;
 
-      this.setState({
-        _id: target._id,
-        maintenance_type: target.maintenance_type,
-        ref_code: target.ref_code,
-        building_name: target.building_name,
-        address: target.address,
-        city: target.city,
-        province: target.province,
-        extra: target.extra,
-        reference: target.reference,
-        reference_phone: target.reference_phone,
-        reference_mobile: target.reference_mobile,
-        zone: target.zone,
-        gdpr_main_reference: target.gdpr_main_reference,
-        gdpr_main_reference_email: target.gdpr_main_reference_email,
-        gdpr_main_reference_type: target.gdpr_main_reference_type,
-        gdpr_secondary_reference: target.gdpr_secondary_reference,
-        gdpr_secondary_reference_email: target.gdpr_secondary_reference_email,
-        gdpr_secondary_reference_type: target.gdpr_secondary_reference_type,
-      });
+        this.setState({
+          _id: target._id,
+          maintenance_type: target.maintenance_type,
+          ref_code: target.ref_code,
+          building_name: target.building_name,
+          address: target.address,
+          city: target.city,
+          province: target.province,
+          extra: target.extra,
+          reference: target.reference,
+          reference_phone: target.reference_phone,
+          reference_mobile: target.reference_mobile,
+          zone: target.zone,
+          gdpr_main_reference: target.gdpr_main_reference,
+          gdpr_main_reference_email: target.gdpr_main_reference_email,
+          gdpr_main_reference_type: target.gdpr_main_reference_type,
+          gdpr_secondary_reference: target.gdpr_secondary_reference,
+          gdpr_secondary_reference_email: target.gdpr_secondary_reference_email,
+          gdpr_secondary_reference_type: target.gdpr_secondary_reference_type,
+        });
+
     }
   }
 
