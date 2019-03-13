@@ -49,10 +49,9 @@ fs.readdir(dir, function(err, items) {
 
 var cron = require('node-cron');
 
-cron.schedule('00 13 * * 0-5', () => {
-  importer.sendOldDocuments(50);
+cron.schedule('30 08 * * 0-5', () => {
+  importer.sendOldDocuments(100);
 });
-
 
 
 process.on('SIGINT', function() {
