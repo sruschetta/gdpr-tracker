@@ -111,7 +111,7 @@ class LoginPage extends Component {
             </Button>
           </CardActions>
         </Card>
-        <Dialog open={Boolean(this.state.dialogOpen)} maxWidth={'sm'}>
+        <Dialog open={this.state.dialogOpen} maxWidth={'sm'}>
           <DialogTitle color="primary">{WARNING}</DialogTitle>
           <DialogContent>
             <DialogContentText>

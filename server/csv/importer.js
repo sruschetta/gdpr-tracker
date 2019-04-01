@@ -96,11 +96,17 @@ module.exports.importCSV = function(csvFilePath, date){
             }
           }
         }
+        
+
 
         oldDocument.save()
                    .then()
                    .catch(err => handleError(err));
+
+        console.log("saving: " + oldDocument);
+
         });
+
     });
   });
 }

@@ -41,7 +41,7 @@ fs.readdir(dir, function(err, items) {
   if(items){
     for (var i = 0; i < items.length; i++) {
         var year = (items[i]).match( /20\d{2}/g)[0];
-        //importer.importCSV(dir + '/' + items[i], new Date(year, 0, 1));
+        importer.importCSV(dir + '/' + items[i], new Date(year, 0, 1));
     }
   }
 });
@@ -49,7 +49,7 @@ fs.readdir(dir, function(err, items) {
 
 var cron = require('node-cron');
 
-cron.schedule('30 08 * * 0-5', () => {
+cron.schedule('30 08 * * 1-5', () => {
   importer.sendOldDocuments(100);
 });
 
