@@ -25,7 +25,7 @@ module.exports.importCSV = function(csvFilePath, date){
 
     fs.unlinkSync(csvFilePath);
 
-    MaintenanceType.find({title: 'Assistenza tecnica'}).then( manType => {
+    MaintenanceType.find({title: 'Assistenza Tecnica'}).then( manType => {
 
       jsonObj.forEach( (item) => {
         const oldDocument = new OldDocument();
