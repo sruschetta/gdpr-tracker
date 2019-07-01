@@ -3,6 +3,8 @@ const csv = require('csvtojson');
 const OldDocument = require('../models/old_document');
 const Document = require('../models/document');
 const ClientType = require('../models/client_type');
+const MaintenanceType = require('../models/maintenance_type');
+
 
 const fs = require('fs');
 
@@ -23,10 +25,9 @@ module.exports.importCSV = function(csvFilePath, date){
 
     fs.unlinkSync(csvFilePath);
 
-    ClientType.find().sort({name: 'asc'}).then( manTypes => {
+    MaintenanceType.find({title: 'Assistenza tecnica'}).then( manType => {
 
       jsonObj.forEach( (item) => {
-
         const oldDocument = new OldDocument();
 
         if(item['1']) {
@@ -34,18 +35,36 @@ module.exports.importCSV = function(csvFilePath, date){
         }
 
         if(item['2']) {
+
           oldDocument.building_name = item['2'].replace(/\uFFFD/g, '');
         }
 
         oldDocument.creation_date = date;
 
         if(item['3']) {
-          oldDocument.city = item['3'].replace(/\uFFFD/g, '');
+          oldDocument.address = item['3'].replace(/\uFFFD/g, '');
         }
 
         if(item['4']) {
-          oldDocument.reference = item['4'].replace(/\uFFFD/g, '');
+          oldDocument.city = item['4'].replace(/\uFFFD/g, '');
         }
+
+        if(item['5']) {
+          oldDocument.province = item['5'].replace(/\uFFFD/g, '');
+        }
+
+        if(item['6']) {
+          oldDocument.extra = item['6'].replace(/\uFFFD/g, '');
+        }
+
+        if(item['7']) {
+          oldDocument.reference = item['7'].replace(/\uFFFD/g, '');
+        }
+
+        if(item['12']) {
+          oldDocument.reference = item['12'].replace(/\uFFFD/g, '');
+        }
+
 
         if(item['5']){
           var phone = validatePhone(item['5'].replace(/\uFFFD/g, ''));
@@ -54,62 +73,25 @@ module.exports.importCSV = function(csvFilePath, date){
           }
         }
 
+        oldDocument.maintenance_type = manType[0]['_id'];
+
         var email = validateEmail(item['13']);
         if(email){
-          oldDocument.gdpr_main_reference_type = manTypes[0]._id;
           if(item['12']){
             oldDocument.gdpr_main_reference = item['12'].replace(/\uFFFD/g, '');
           }
           oldDocument.gdpr_main_reference_email = item['13'].replace(/\uFFFD/g, '').toLowerCase();
         }
-        else {
-
-          email = validateEmail(item['11']);
-
-          if(email){
-            oldDocument.gdpr_main_reference_type = manTypes[1]._id;
-            if(item['10']){
-              oldDocument.gdpr_main_reference = item['10'].replace(/\uFFFD/g, '');
-            }
-            oldDocument.gdpr_main_reference_email = item['11'].replace(/\uFFFD/g, '').toLowerCase();
-          }
-          else {
-
-            email = validateEmail(item['9']);
-
-            if(email){
-              oldDocument.gdpr_main_reference_type = manTypes[3]._id;
-              if(item['8']){
-                oldDocument.gdpr_main_reference = item['8'].replace(/\uFFFD/g, '');
-              }
-              oldDocument.gdpr_main_reference_email = item['9'].replace(/\uFFFD/g, '').toLowerCase();
-            }
-            else {
-              email = validateEmail(item['15']);
-              if(email){
-                  oldDocument.gdpr_main_reference_type = manTypes[2]._id;
-                  if(item['14']){
-                    oldDocument.gdpr_main_reference = item['14'].replace(/\uFFFD/g, '');
-                  }
-                  oldDocument.gdpr_main_reference_email = item['15'].replace(/\uFFFD/g, '').toLowerCase();
-              }
-            }
-          }
-        }
-        
-
 
         oldDocument.save()
                    .then()
                    .catch(err => handleError(err));
 
-        console.log("saving: " + oldDocument);
-
         });
-
     });
   });
 }
+
 
 module.exports.sendOldDocuments = function(num) {
 
