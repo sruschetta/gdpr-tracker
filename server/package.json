@@ -14,7 +14,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^3.0.2",
+    "bcrypt": "^5.0.0",
     "concurrently": "^4.1.0",
     "csvtojson": "^2.0.8",
     "dotenv": "^6.2.0",
