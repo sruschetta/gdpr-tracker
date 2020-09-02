@@ -22,7 +22,7 @@
     "express-fileupload": "^1.1.1-alpha.1",
     "express-session": "^1.15.6",
     "fs": "0.0.1-security",
-    "googleapis": "^27.0.0",
+    "googleapis": "^39.1.0",
     "is-empty": "^1.2.0",
     "jsonwebtoken": "^8.4.0",
     "mongoose": "^5.4.0",
